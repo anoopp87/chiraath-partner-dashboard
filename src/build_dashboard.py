@@ -165,19 +165,20 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     # Charts
     charts = {}
+    PLOTLY_CONFIG = {"responsive": True, "displayModeBar": False}
 
     if {"Month", "Purchases (₹)", "Sales (₹)"}.issubset(set(month_df.columns)):
         fig_month = go.Figure()
         fig_month.add_trace(go.Bar(x=month_df["Month"], y=month_df["Purchases (₹)"], name="Purchases"))
         fig_month.add_trace(go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales"))
         fig_month.update_layout(barmode="group", title="Monthly Purchases vs Sales")
-        charts["month"] = pio.to_html(fig_month, include_plotlyjs="cdn", full_html=False)
+        charts["month"] = pio.to_html(fig_month, include_plotlyjs="cdn", full_html=False, config=PLOTLY_CONFIG)
     else:
         charts["month"] = "<div style='color:#6b7280;font-size:13px'>Monthly chart unavailable (columns changed).</div>"
 
     if {"Month", "Profit (₹)"}.issubset(set(month_df.columns)):
         fig_profit = px.line(month_df, x="Month", y="Profit (₹)", markers=True, title="Monthly Profit (₹)")
-        charts["profit"] = pio.to_html(fig_profit, include_plotlyjs=False, full_html=False)
+        charts["profit"] = pio.to_html(fig_profit, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
     else:
         charts["profit"] = "<div style='color:#6b7280;font-size:13px'>Profit chart unavailable (columns changed).</div>"
 
@@ -186,13 +187,13 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         fig_cat_qty.add_trace(go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold"))
         fig_cat_qty.add_trace(go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Pending"], name="Qty Pending"))
         fig_cat_qty.update_layout(barmode="stack", title="Quantity by Category")
-        charts["cat_qty"] = pio.to_html(fig_cat_qty, include_plotlyjs=False, full_html=False)
+        charts["cat_qty"] = pio.to_html(fig_cat_qty, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
     else:
         charts["cat_qty"] = "<div style='color:#6b7280;font-size:13px'>Category qty chart unavailable (columns changed).</div>"
 
     if {"Category", "Pending Value (₹)"}.issubset(set(pending_val_df.columns)):
         fig_pending_val = px.bar(pending_val_df, x="Category", y="Pending Value (₹)", title="Pending Stock Value by Category (₹)")
-        charts["pending_val"] = pio.to_html(fig_pending_val, include_plotlyjs=False, full_html=False)
+        charts["pending_val"] = pio.to_html(fig_pending_val, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
     else:
         charts["pending_val"] = "<div style='color:#6b7280;font-size:13px'>Pending value chart unavailable (columns changed).</div>"
 

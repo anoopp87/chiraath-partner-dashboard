@@ -147,6 +147,16 @@
         font-size: 12px;
         margin-top: 10px;
       }
+      /* Plotly charts: breathe more on mobile */
+      .plotly-graph-div {
+        width: 100% !important;
+        height: 380px !important;
+      }
+      @media (max-width: 980px) {
+        .plotly-graph-div {
+          height: 460px !important;
+        }
+      }
       @media (max-width: 980px) {
         .kpis {
           grid-template-columns: repeat(2, minmax(0, 1fr));

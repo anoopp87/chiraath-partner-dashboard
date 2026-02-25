@@ -1,0 +1,288 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chiraath Partner Dashboard</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+        --radius: 16px;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 24px auto;
+        padding: 0 16px 48px;
+      }
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0;
+        letter-spacing: 0.2px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+      .actions a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        color: var(--text);
+        margin-left: 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+      .kpi {
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, #fff, #fbfbfd);
+      }
+      .kpi .label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .kpi .value {
+        font-size: 24px;
+        font-weight: 750;
+        margin-top: 6px;
+      }
+      .kpi .hint {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+      }
+      .kpis {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .span-6 {
+        grid-column: span 6;
+      }
+      .span-7 {
+        grid-column: span 7;
+      }
+      .span-5 {
+        grid-column: span 5;
+      }
+      h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+      }
+      th {
+        background: #fafafa;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+      .scroll {
+        max-height: 360px;
+        overflow: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+      .pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        background: #fff;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+      @media (max-width: 980px) {
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .span-6,
+        .span-7,
+        .span-5 {
+          grid-column: 1 / -1;
+        }
+        .actions a {
+          margin-left: 0;
+          margin-right: 8px;
+        }
+        .hero {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <h1>Chiraath Partner Dashboard</h1>
+          <div class="sub">
+            <span class="pill">Last updated: {{ last_updated }}</span>
+            <span class="pill">Qty sold: {{ qty_sold }}</span>
+            <span class="pill">Qty pending: {{ qty_pending }}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="./{{ excel_filename }}" download>Download full Excel</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="kpis">
+          <div class="kpi">
+            <div class="label">Total Purchases</div>
+            <div class="value">{{ total_purchases }}</div>
+            <div class="hint">From Summary tab</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Total Sales (Completed)</div>
+            <div class="value">{{ total_sales_completed }}</div>
+            <div class="hint">Completed only</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Profit / Loss (Completed)</div>
+            <div class="value">{{ profit_loss }}</div>
+            <div class="hint">{{ profit_status }}</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Pending Stock Value</div>
+            <div class="value">{{ pending_stock_value }}</div>
+            <div class="hint">From Dashboard tab</div>
+          </div>
+        </div>
+
+        <!-- Move these two tables ABOVE the charts -->
+        <div class="card span-6">
+          <h2>Contribution Summary</h2>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  {% for c in contrib_cols %}
+                  <th>{{ c }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in contrib_records %}
+                <tr>
+                  {% for c in contrib_cols %}
+                  <td>{{ r[c] }}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            Pending Balance: + means receive, - means pay (as per your sheet).
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <h2>Cash Pool Summary</h2>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  {% for c in cash_cols %}
+                  <th>{{ c }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for r in cash_records %}
+                <tr>
+                  {% for c in cash_cols %}
+                  <td>{{ r[c] }}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            Pending Balance: + means pay to pool, - means receive (as per your
+            sheet).
+          </div>
+        </div>
+
+        <!-- Charts now come after -->
+        <div class="card span-7">
+          <h2>Monthly Purchases vs Sales</h2>
+          {{ chart_month | safe }}
+        </div>
+        <div class="card span-5">
+          <h2>Monthly Profit</h2>
+          {{ chart_profit | safe }}
+        </div>
+
+        <div class="card span-6">
+          <h2>Quantity by Category</h2>
+          {{ chart_cat_qty | safe }}
+        </div>
+
+        <div class="card span-6">
+          <h2>Pending Stock Value by Category</h2>
+          {{ chart_pending_val | safe }}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

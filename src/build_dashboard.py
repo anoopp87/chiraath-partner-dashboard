@@ -138,7 +138,15 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     # Tables
     contrib_df = df_from_range(ws_sum, CONTRIB_HEADER_ROW, CONTRIB_DATA_ROWS, CONTRIB_COLS)
+
+    # Keep only Partner + last two columns
+    contrib_df = contrib_df.iloc[:, [0, -2, -1]]
+
+
     cash_df = df_from_range(ws_sum, CASH_HEADER_ROW, CASH_DATA_ROWS, CASH_COLS)
+
+    # Keep only Partner + last two columns
+    cash_df = cash_df.iloc[:, [0, -2, -1]]
 
     month_df = df_from_range(ws_dash, MONTH_HEADER_ROW, MONTH_DATA_ROWS, MONTH_COLS)
     # Coerce numeric columns if present

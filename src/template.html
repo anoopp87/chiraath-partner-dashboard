@@ -194,10 +194,6 @@
         padding-bottom: 8px;
       }
 
-      .hidden-row {
-        display: none;
-      }
-
       .low-stock {
         background: #fff7ed;
       }
@@ -210,7 +206,6 @@
         color: var(--muted);
       }
 
-      /* Plotly charts: improved mobile breathing room */
       .plotly-graph-div {
         width: 100% !important;
         min-height: 380px !important;
@@ -392,7 +387,6 @@
               id="inventorySearch"
               class="search-input"
               placeholder="Search by SKU, item, category, or color..."
-              oninput="searchInventory()"
             />
           </div>
 
@@ -406,14 +400,18 @@
                 </tr>
               </thead>
               <tbody id="inventoryBody">
-                <tr id="inventoryHelper">
-                  <td class="helper-cell" colspan="{{ inventory_cols|length }}">
+                <tr id="inventoryHelperRow">
+                  <td
+                    id="inventoryHelperCell"
+                    class="helper-cell"
+                    colspan="{{ inventory_cols|length }}"
+                  >
                     Start typing in the search box to find inventory items.
                   </td>
                 </tr>
 
                 {% for r in inventory_records %}
-                <tr class="inventory-row hidden-row">
+                <tr class="inventory-row">
                   {% for c in inventory_cols %}
                   <td>{{ r[c] }}</td>
                   {% endfor %}
@@ -433,9 +431,10 @@
     <script>
       function searchInventory() {
         const inputEl = document.getElementById("inventorySearch");
-        const helper = document.getElementById("inventoryHelper");
+        const helperRow = document.getElementById("inventoryHelperRow");
+        const helperCell = document.getElementById("inventoryHelperCell");
         const rows = document.querySelectorAll(".inventory-row");
-        const input = (inputEl?.value || "").toLowerCase().trim();
+        const input = (inputEl.value || "").toLowerCase().trim();
 
         let visibleCount = 0;
 
@@ -450,7 +449,7 @@
           }
 
           if (text.includes(input)) {
-            row.style.display = "";
+            row.style.display = "table-row";
 
             const qtyCell = row.querySelector("td:nth-child(5)");
             const qty = parseInt((qtyCell?.textContent || "0").trim(), 10) || 0;
@@ -468,19 +467,26 @@
         });
 
         if (!input) {
-          helper.style.display = "";
-          helper.innerHTML =
-            '<td class="helper-cell" colspan="{{ inventory_cols|length }}">Start typing in the search box to find inventory items.</td>';
+          helperRow.style.display = "table-row";
+          helperCell.textContent =
+            "Start typing in the search box to find inventory items.";
         } else if (visibleCount === 0) {
-          helper.style.display = "";
-          helper.innerHTML =
-            '<td class="helper-cell" colspan="{{ inventory_cols|length }}">No matching items found.</td>';
+          helperRow.style.display = "table-row";
+          helperCell.textContent = "No matching items found.";
         } else {
-          helper.style.display = "none";
+          helperRow.style.display = "none";
         }
       }
 
-      window.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputEl = document.getElementById("inventorySearch");
+        const rows = document.querySelectorAll(".inventory-row");
+
+        rows.forEach((row) => {
+          row.style.display = "none";
+        });
+
+        inputEl.addEventListener("input", searchInventory);
         searchInventory();
       });
     </script>

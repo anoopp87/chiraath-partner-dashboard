@@ -191,6 +191,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         "Item Name",
         "Category",
         "Color",
+        "Size",
         "Qty Pending",
         "Sale Amount (₹)",
         "Purchase Price (₹)",

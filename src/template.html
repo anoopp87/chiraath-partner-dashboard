@@ -14,6 +14,7 @@
         --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
         --radius: 16px;
       }
+
       body {
         margin: 0;
         background: var(--bg);
@@ -25,11 +26,13 @@
           Roboto,
           Arial;
       }
+
       .wrap {
         max-width: 1180px;
         margin: 24px auto;
         padding: 0 16px 48px;
       }
+
       .hero {
         display: flex;
         align-items: flex-end;
@@ -37,16 +40,19 @@
         gap: 16px;
         margin-bottom: 14px;
       }
+
       h1 {
         font-size: 22px;
         margin: 0;
         letter-spacing: 0.2px;
       }
+
       .sub {
         color: var(--muted);
         font-size: 13px;
         margin-top: 6px;
       }
+
       .actions a {
         display: inline-block;
         text-decoration: none;
@@ -59,11 +65,13 @@
         color: var(--text);
         margin-left: 8px;
       }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
         gap: 14px;
       }
+
       .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -71,71 +79,86 @@
         box-shadow: var(--shadow);
         padding: 14px;
       }
+
       .kpi {
         padding: 14px;
         border-radius: 14px;
         border: 1px solid var(--border);
         background: linear-gradient(180deg, #fff, #fbfbfd);
       }
+
       .kpi .label {
         color: var(--muted);
         font-size: 12px;
       }
+
       .kpi .value {
         font-size: 24px;
         font-weight: 750;
         margin-top: 6px;
       }
+
       .kpi .hint {
         color: var(--muted);
         font-size: 12px;
         margin-top: 4px;
       }
+
       .kpis {
         grid-column: 1 / -1;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
       }
+
       .span-6 {
         grid-column: span 6;
       }
+
       .span-7 {
         grid-column: span 7;
       }
+
       .span-5 {
         grid-column: span 5;
       }
+
       .span-12 {
         grid-column: 1 / -1;
       }
+
       h2 {
         margin: 0 0 10px;
         font-size: 15px;
       }
+
       table {
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
       }
+
       th,
       td {
         padding: 10px 8px;
         border-bottom: 1px solid var(--border);
         text-align: left;
       }
+
       th {
         background: #fafafa;
         position: sticky;
         top: 0;
         z-index: 1;
       }
+
       .scroll {
         max-height: 360px;
         overflow: auto;
         border-radius: 12px;
         border: 1px solid var(--border);
       }
+
       .pill {
         display: inline-block;
         padding: 3px 10px;
@@ -145,11 +168,13 @@
         color: var(--muted);
         background: #fff;
       }
+
       .note {
         color: var(--muted);
         font-size: 12px;
         margin-top: 10px;
       }
+
       .search-input {
         width: 100%;
         box-sizing: border-box;
@@ -159,6 +184,26 @@
         border-radius: 10px;
         font-size: 13px;
         background: #fff;
+      }
+
+      .inventory-search-wrap {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 5;
+        padding-bottom: 8px;
+      }
+
+      .hidden-row {
+        display: none;
+      }
+
+      .low-stock {
+        background: #fff7ed;
+      }
+
+      .out-of-stock {
+        background: #fee2e2;
       }
 
       /* Plotly charts: improved mobile breathing room */
@@ -176,19 +221,23 @@
         .plotly-graph-div {
           min-height: 460px !important;
         }
+
         .kpis {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+
         .span-6,
         .span-7,
         .span-5,
         .span-12 {
           grid-column: 1 / -1;
         }
+
         .actions a {
           margin-left: 0;
           margin-right: 8px;
         }
+
         .hero {
           align-items: flex-start;
           flex-direction: column;
@@ -199,12 +248,15 @@
         .wrap {
           padding: 0 10px 36px;
         }
+
         .plotly-graph-div {
           min-height: 520px !important;
         }
+
         .card {
           padding: 18px 12px;
         }
+
         h2 {
           font-size: 14px;
           margin-bottom: 12px;
@@ -327,15 +379,18 @@
           {{ chart_pending_val | safe }}
         </div>
 
-        <div class="card span-12">
+        <div class="card span-12 inventory-card">
           <h2>Inventory Browser</h2>
-          <input
-            type="text"
-            id="inventorySearch"
-            class="search-input"
-            placeholder="Search by SKU, item, category, or color..."
-            onkeyup="searchInventory()"
-          />
+
+          <div class="inventory-search-wrap">
+            <input
+              type="text"
+              id="inventorySearch"
+              class="search-input"
+              placeholder="Search by SKU, item, category, or color..."
+              onkeyup="searchInventory()"
+            />
+          </div>
 
           <div class="scroll">
             <table id="inventoryTable">
@@ -346,26 +401,26 @@
                   {% endfor %}
                 </tr>
               </thead>
-              <tbody>
-                {% if inventory_records %} {% for r in inventory_records %}
-                <tr>
+              <tbody id="inventoryBody">
+                <tr id="inventoryHelper">
+                  <td colspan="{{ inventory_cols|length }}">
+                    Start typing in the search box to find inventory items.
+                  </td>
+                </tr>
+
+                {% for r in inventory_records %}
+                <tr class="inventory-row hidden-row">
                   {% for c in inventory_cols %}
                   <td>{{ r[c] }}</td>
                   {% endfor %}
                 </tr>
-                {% endfor %} {% else %}
-                <tr>
-                  <td colspan="{{ inventory_cols|length }}">
-                    No inventory data available.
-                  </td>
-                </tr>
-                {% endif %}
+                {% endfor %}
               </tbody>
             </table>
           </div>
+
           <div class="note">
-            Quick search for SKU, item name, category, and color. Use Download
-            full Excel for all details.
+            Quick search for SKU, item name, category, and color.
           </div>
         </div>
       </div>
@@ -375,14 +430,53 @@
       function searchInventory() {
         const input = document
           .getElementById("inventorySearch")
-          .value.toLowerCase();
-        const rows = document.querySelectorAll("#inventoryTable tbody tr");
+          .value.toLowerCase()
+          .trim();
+
+        const rows = document.querySelectorAll(".inventory-row");
+        const helper = document.getElementById("inventoryHelper");
+
+        let visibleCount = 0;
 
         rows.forEach((row) => {
-          row.style.display = row.innerText.toLowerCase().includes(input)
-            ? ""
-            : "none";
+          const text = row.innerText.toLowerCase();
+
+          row.classList.remove("low-stock", "out-of-stock");
+
+          if (input.length === 0) {
+            row.style.display = "none";
+            return;
+          }
+
+          if (text.includes(input)) {
+            row.style.display = "";
+
+            const cells = row.querySelectorAll("td");
+            const qtyCell = cells[cells.length - 1];
+            const qty = parseInt(qtyCell.innerText, 10) || 0;
+
+            if (qty === 0) {
+              row.classList.add("out-of-stock");
+            } else if (qty === 1) {
+              row.classList.add("low-stock");
+            }
+
+            visibleCount++;
+          } else {
+            row.style.display = "none";
+          }
         });
+
+        if (input.length === 0) {
+          helper.innerText =
+            "Start typing in the search box to find inventory items.";
+          helper.style.display = "";
+        } else if (visibleCount === 0) {
+          helper.innerText = "No matching items found.";
+          helper.style.display = "";
+        } else {
+          helper.style.display = "none";
+        }
       }
     </script>
   </body>

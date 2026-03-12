@@ -193,6 +193,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         "Color",
         "Qty Pending",
         "Sale Amount (₹)",
+        "Purchase Price (₹)",
     ]
 
     available_inventory_cols = [c for c in desired_inventory_cols if c in inventory_df.columns]

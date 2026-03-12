@@ -1,4 +1,3 @@
-\
 from __future__ import annotations
 
 from pathlib import Path
@@ -19,6 +18,7 @@ from jinja2 import Template
 # ---------------------------
 SHEET_SUMMARY = "Summary"
 SHEET_DASHBOARD = "Dashboard"
+SHEET_INVENTORY = "INVENTORY"
 
 # Summary KPIs (cell addresses)
 CELL_TOTAL_PURCHASES = "B3"
@@ -110,7 +110,20 @@ def format_df_currency(df: pd.DataFrame) -> tuple[list[dict], list[str]]:
     df2 = df.copy()
     for col in df2.columns:
         col_s = str(col)
-        if "₹" in col_s or any(k in col_s.lower() for k in ["amount", "value", "paid", "balance", "target", "excess", "collected", "transferred", "share"]):
+        if "₹" in col_s or any(
+            k in col_s.lower()
+            for k in [
+                "amount",
+                "value",
+                "paid",
+                "balance",
+                "target",
+                "excess",
+                "collected",
+                "transferred",
+                "share",
+            ]
+        ):
             df2[col] = df2[col].apply(money2)
     return df2.to_dict(orient="records"), list(df2.columns)
 
@@ -124,6 +137,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     wb = openpyxl.load_workbook(input_xlsx, data_only=True)
     ws_sum = wb[SHEET_SUMMARY]
     ws_dash = wb[SHEET_DASHBOARD]
+    ws_inventory = wb[SHEET_INVENTORY]
 
     # KPIs
     total_purchases = ws_sum[CELL_TOTAL_PURCHASES].value
@@ -142,13 +156,13 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     # Keep only Partner + last two columns
     contrib_df = contrib_df.iloc[:, [0, -2, -1]]
 
-
     cash_df = df_from_range(ws_sum, CASH_HEADER_ROW, CASH_DATA_ROWS, CASH_COLS)
 
     # Keep only Partner + last two columns
     cash_df = cash_df.iloc[:, [0, -2, -1]]
 
     month_df = df_from_range(ws_dash, MONTH_HEADER_ROW, MONTH_DATA_ROWS, MONTH_COLS)
+
     # Coerce numeric columns if present
     for c in ["Purchases (₹)", "Sales (₹)", "Profit (₹)"]:
         if c in month_df.columns:
@@ -161,7 +175,44 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     pending_val_df = df_from_range(ws_dash, PENDVAL_HEADER_ROW, PENDVAL_DATA_ROWS, PENDVAL_COLS)
     if "Pending Value (₹)" in pending_val_df.columns:
-        pending_val_df["Pending Value (₹)"] = pd.to_numeric(pending_val_df["Pending Value (₹)"], errors="coerce").fillna(0)
+        pending_val_df["Pending Value (₹)"] = pd.to_numeric(
+            pending_val_df["Pending Value (₹)"], errors="coerce"
+        ).fillna(0)
+
+    # Inventory
+    inventory_rows = list(ws_inventory.values)
+    if inventory_rows:
+        inventory_df = pd.DataFrame(inventory_rows[1:], columns=inventory_rows[0])
+    else:
+        inventory_df = pd.DataFrame()
+
+    desired_inventory_cols = [
+        "SKU",
+        "Item Name",
+        "Category",
+        "Color",
+        "Qty Pending",
+        "Sale Amount (₹)",
+    ]
+
+    available_inventory_cols = [c for c in desired_inventory_cols if c in inventory_df.columns]
+
+    if available_inventory_cols:
+        inventory_df = inventory_df[available_inventory_cols].copy()
+        if "Qty Pending" in inventory_df.columns:
+            inventory_df["Qty Pending"] = pd.to_numeric(
+                inventory_df["Qty Pending"], errors="coerce"
+            ).fillna(0).astype(int)
+
+        if "Sale Amount (₹)" in inventory_df.columns:
+            inventory_df["Sale Amount (₹)"] = inventory_df["Sale Amount (₹)"].apply(money2)
+
+        inventory_df = inventory_df.fillna("")
+        inventory_records = inventory_df.to_dict(orient="records")
+        inventory_cols = list(inventory_df.columns)
+    else:
+        inventory_records = []
+        inventory_cols = desired_inventory_cols
 
     # Charts
     charts = {}
@@ -169,33 +220,92 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     if {"Month", "Purchases (₹)", "Sales (₹)"}.issubset(set(month_df.columns)):
         fig_month = go.Figure()
-        fig_month.add_trace(go.Bar(x=month_df["Month"], y=month_df["Purchases (₹)"], name="Purchases"))
-        fig_month.add_trace(go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales"))
+        fig_month.add_trace(
+            go.Bar(x=month_df["Month"], y=month_df["Purchases (₹)"], name="Purchases")
+        )
+        fig_month.add_trace(
+            go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales")
+        )
         fig_month.update_layout(barmode="group", title="Monthly Purchases vs Sales")
-        charts["month"] = pio.to_html(fig_month, include_plotlyjs="cdn", full_html=False, config=PLOTLY_CONFIG)
+        charts["month"] = pio.to_html(
+            fig_month,
+            include_plotlyjs="cdn",
+            full_html=False,
+            config=PLOTLY_CONFIG,
+        )
     else:
-        charts["month"] = "<div style='color:#6b7280;font-size:13px'>Monthly chart unavailable (columns changed).</div>"
+        charts["month"] = (
+            "<div style='color:#6b7280;font-size:13px'>"
+            "Monthly chart unavailable (columns changed)."
+            "</div>"
+        )
 
     if {"Month", "Profit (₹)"}.issubset(set(month_df.columns)):
-        fig_profit = px.line(month_df, x="Month", y="Profit (₹)", markers=True, title="Monthly Profit (₹)")
-        charts["profit"] = pio.to_html(fig_profit, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
+        fig_profit = px.line(
+            month_df,
+            x="Month",
+            y="Profit (₹)",
+            markers=True,
+            title="Monthly Profit (₹)",
+        )
+        charts["profit"] = pio.to_html(
+            fig_profit,
+            include_plotlyjs=False,
+            full_html=False,
+            config=PLOTLY_CONFIG,
+        )
     else:
-        charts["profit"] = "<div style='color:#6b7280;font-size:13px'>Profit chart unavailable (columns changed).</div>"
+        charts["profit"] = (
+            "<div style='color:#6b7280;font-size:13px'>"
+            "Profit chart unavailable (columns changed)."
+            "</div>"
+        )
 
     if {"Category", "Qty Sold", "Qty Pending"}.issubset(set(cat_qty_df.columns)):
         fig_cat_qty = go.Figure()
-        fig_cat_qty.add_trace(go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold"))
-        fig_cat_qty.add_trace(go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Pending"], name="Qty Pending"))
+        fig_cat_qty.add_trace(
+            go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold")
+        )
+        fig_cat_qty.add_trace(
+            go.Bar(
+                x=cat_qty_df["Category"],
+                y=cat_qty_df["Qty Pending"],
+                name="Qty Pending",
+            )
+        )
         fig_cat_qty.update_layout(barmode="stack", title="Quantity by Category")
-        charts["cat_qty"] = pio.to_html(fig_cat_qty, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
+        charts["cat_qty"] = pio.to_html(
+            fig_cat_qty,
+            include_plotlyjs=False,
+            full_html=False,
+            config=PLOTLY_CONFIG,
+        )
     else:
-        charts["cat_qty"] = "<div style='color:#6b7280;font-size:13px'>Category qty chart unavailable (columns changed).</div>"
+        charts["cat_qty"] = (
+            "<div style='color:#6b7280;font-size:13px'>"
+            "Category qty chart unavailable (columns changed)."
+            "</div>"
+        )
 
     if {"Category", "Pending Value (₹)"}.issubset(set(pending_val_df.columns)):
-        fig_pending_val = px.bar(pending_val_df, x="Category", y="Pending Value (₹)", title="Pending Stock Value by Category (₹)")
-        charts["pending_val"] = pio.to_html(fig_pending_val, include_plotlyjs=False, full_html=False, config=PLOTLY_CONFIG)
+        fig_pending_val = px.bar(
+            pending_val_df,
+            x="Category",
+            y="Pending Value (₹)",
+            title="Pending Stock Value by Category (₹)",
+        )
+        charts["pending_val"] = pio.to_html(
+            fig_pending_val,
+            include_plotlyjs=False,
+            full_html=False,
+            config=PLOTLY_CONFIG,
+        )
     else:
-        charts["pending_val"] = "<div style='color:#6b7280;font-size:13px'>Pending value chart unavailable (columns changed).</div>"
+        charts["pending_val"] = (
+            "<div style='color:#6b7280;font-size:13px'>"
+            "Pending value chart unavailable (columns changed)."
+            "</div>"
+        )
 
     contrib_records, contrib_cols = format_df_currency(contrib_df)
     cash_records, cash_cols = format_df_currency(cash_df)
@@ -221,6 +331,8 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         contrib_records=contrib_records,
         cash_cols=cash_cols,
         cash_records=cash_records,
+        inventory_cols=inventory_cols,
+        inventory_records=inventory_records,
         excel_filename=excel_filename,
     )
 

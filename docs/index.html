@@ -106,6 +106,9 @@
       .span-5 {
         grid-column: span 5;
       }
+      .span-12 {
+        grid-column: 1 / -1;
+      }
       h2 {
         margin: 0 0 10px;
         font-size: 15px;
@@ -147,6 +150,16 @@
         font-size: 12px;
         margin-top: 10px;
       }
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fff;
+      }
 
       /* Plotly charts: improved mobile breathing room */
       .plotly-graph-div {
@@ -168,7 +181,8 @@
         }
         .span-6,
         .span-7,
-        .span-5 {
+        .span-5,
+        .span-12 {
           grid-column: 1 / -1;
         }
         .actions a {
@@ -352,24 +366,2883 @@
         <div class="card span-7">
           <h2>Monthly Purchases vs Sales</h2>
           <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>                <div id="d1e2b503-1995-43bb-9c07-eb08d439706c" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("d1e2b503-1995-43bb-9c07-eb08d439706c")) {                    Plotly.newPlot(                        "d1e2b503-1995-43bb-9c07-eb08d439706c",                        [{"name":"Purchases","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"y":[47311,4790,20082,0,0,0,0,100869,2304,50547,38048,13250],"type":"bar"},{"name":"Sales","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"y":[45448,19089,8798,0,0,0,0,12600,62800,24259,14200,52168],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"barmode":"group","title":{"text":"Monthly Purchases vs Sales"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
+        <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>                <div id="d474b303-953c-4b15-b094-6aecec4b4e30" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("d474b303-953c-4b15-b094-6aecec4b4e30")) {                    Plotly.newPlot(                        "d474b303-953c-4b15-b094-6aecec4b4e30",                        [{"name":"Purchases","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"y":[47311,4790,20082,0,0,0,0,100869,2304,50547,38048,13250],"type":"bar"},{"name":"Sales","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"y":[45448,19089,8798,0,0,0,0,12600,62800,24259,14200,52168],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"barmode":"group","title":{"text":"Monthly Purchases vs Sales"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
         </div>
 
         <div class="card span-5">
           <h2>Monthly Profit</h2>
-          <div>                            <div id="09f763d4-7f93-440c-9f91-7b149eebbfed" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("09f763d4-7f93-440c-9f91-7b149eebbfed")) {                    Plotly.newPlot(                        "09f763d4-7f93-440c-9f91-7b149eebbfed",                        [{"hovertemplate":"Month=%{x}<br>Profit (\u20b9)=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines+markers","name":"","orientation":"v","showlegend":false,"x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"xaxis":"x","y":[-1863,14299,-11284,0,0,0,0,-88269,60496,-26288,-23848,38918],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Month"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Profit (\u20b9)"}},"legend":{"tracegroupgap":0},"title":{"text":"Monthly Profit (\u20b9)"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
+          <div>                            <div id="026495f5-eaed-40ee-a9c5-6ae84770452f" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("026495f5-eaed-40ee-a9c5-6ae84770452f")) {                    Plotly.newPlot(                        "026495f5-eaed-40ee-a9c5-6ae84770452f",                        [{"hovertemplate":"Month=%{x}<br>Profit (\u20b9)=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"","orientation":"v","showlegend":false,"x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"xaxis":"x","y":[-1863,14299,-11284,0,0,0,0,-88269,60496,-26288,-23848,38918],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Month"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Profit (\u20b9)"}},"legend":{"tracegroupgap":0},"title":{"text":"Monthly Profit (\u20b9)"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
         </div>
 
         <div class="card span-6">
           <h2>Quantity by Category</h2>
-          <div>                            <div id="67bd181a-1e2f-4dce-bcd2-59a4a35c573e" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("67bd181a-1e2f-4dce-bcd2-59a4a35c573e")) {                    Plotly.newPlot(                        "67bd181a-1e2f-4dce-bcd2-59a4a35c573e",                        [{"name":"Qty Sold","x":["Saree","Salwar","Kurti"],"y":[109,74,2],"type":"bar"},{"name":"Qty Pending","x":["Saree","Salwar","Kurti"],"y":[49,46,5],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"barmode":"stack","title":{"text":"Quantity by Category"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
+          <div>                            <div id="ee2daaa5-ac25-4a34-b8e1-319f4ac4718c" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("ee2daaa5-ac25-4a34-b8e1-319f4ac4718c")) {                    Plotly.newPlot(                        "ee2daaa5-ac25-4a34-b8e1-319f4ac4718c",                        [{"name":"Qty Sold","x":["Saree","Salwar","Kurti"],"y":[109,74,2],"type":"bar"},{"name":"Qty Pending","x":["Saree","Salwar","Kurti"],"y":[49,46,5],"type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"barmode":"stack","title":{"text":"Quantity by Category"}},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
         </div>
 
         <div class="card span-6">
           <h2>Pending Stock Value by Category</h2>
-          <div>                            <div id="30fc4a5d-97f0-4449-9cb2-937516b9c072" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("30fc4a5d-97f0-4449-9cb2-937516b9c072")) {                    Plotly.newPlot(                        "30fc4a5d-97f0-4449-9cb2-937516b9c072",                        [{"alignmentgroup":"True","hovertemplate":"Category=%{x}<br>Pending Value (\u20b9)=%{y}<extra></extra>","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["Salwar","Saree","Kurti"],"xaxis":"x","y":[51787.0,41706.18,1829.0],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Category"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Pending Value (\u20b9)"}},"legend":{"tracegroupgap":0},"title":{"text":"Pending Stock Value by Category (\u20b9)"},"barmode":"relative"},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
+          <div>                            <div id="979ea931-351e-41e5-8839-a128d6445b82" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("979ea931-351e-41e5-8839-a128d6445b82")) {                    Plotly.newPlot(                        "979ea931-351e-41e5-8839-a128d6445b82",                        [{"alignmentgroup":"True","hovertemplate":"Category=%{x}<br>Pending Value (\u20b9)=%{y}<extra></extra>","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":["Salwar","Saree","Kurti"],"xaxis":"x","y":[51787.0,41706.18,1829.0],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Category"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Pending Value (\u20b9)"}},"legend":{"tracegroupgap":0},"title":{"text":"Pending Stock Value by Category (\u20b9)"},"barmode":"relative"},                        {"responsive": true, "displayModeBar": false}                    )                };                            </script>        </div>
+        </div>
+
+        <div class="card span-12">
+          <h2>Inventory Browser</h2>
+          <input
+            type="text"
+            id="inventorySearch"
+            class="search-input"
+            placeholder="Search by SKU, item, category, or color..."
+            onkeyup="searchInventory()"
+          />
+
+          <div class="scroll">
+            <table id="inventoryTable">
+              <thead>
+                <tr>
+                  
+                  <th>SKU</th>
+                  
+                  <th>Item Name</th>
+                  
+                  <th>Category</th>
+                  
+                  <th>Color</th>
+                  
+                  <th>Qty Pending</th>
+                  
+                  <th>Sale Amount (₹)</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                 
+                <tr>
+                  
+                  <td>CHR-1</td>
+                  
+                  <td>Black Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,250.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-2</td>
+                  
+                  <td>Imported Rayon Salwar Black</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-3</td>
+                  
+                  <td>Cotton Silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-4</td>
+                  
+                  <td>Silk Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-5</td>
+                  
+                  <td>Light weight cotton</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹750.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-6</td>
+                  
+                  <td>Saree USA print (step photo)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-7</td>
+                  
+                  <td>Saree 95 1</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-8</td>
+                  
+                  <td>Linen Block Print Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-9</td>
+                  
+                  <td>Cotton Silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-10</td>
+                  
+                  <td>Black red banarasi</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-11</td>
+                  
+                  <td>Black Imported Rayon Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-12</td>
+                  
+                  <td>Imported Rayon Salwar Set Red</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-13</td>
+                  
+                  <td>Silk Blend Salwar set - Blue</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-14</td>
+                  
+                  <td>Linen Block Print Salwar Set (sunflower)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-15</td>
+                  
+                  <td>Linen Salwar Set (Christmas tree)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-16</td>
+                  
+                  <td>Mul mul cotton</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-17</td>
+                  
+                  <td>Saree 95 1</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-18</td>
+                  
+                  <td>Silk Blend Salwar set - gray</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-19</td>
+                  
+                  <td>Linen Salwar Set (Christmas tree)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-20</td>
+                  
+                  <td>Linen Block Print Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-21</td>
+                  
+                  <td>violet sil saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,300.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-22</td>
+                  
+                  <td>Cotton Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-23</td>
+                  
+                  <td>Light weight cotton</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹750.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-24</td>
+                  
+                  <td>Light weight cotton</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-25</td>
+                  
+                  <td>Kota Linen Saree - biege & maroon</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-26</td>
+                  
+                  <td>Light weight cotton</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-27</td>
+                  
+                  <td>Kota Linen Saree - green silver</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹2,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-28</td>
+                  
+                  <td>Linen Floral Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-29</td>
+                  
+                  <td>Hakoba Cotton Chridar - brown</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-30</td>
+                  
+                  <td>Black 2 piece rayon</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-31</td>
+                  
+                  <td>Linen Block Print Salwar Set (violet)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-32</td>
+                  
+                  <td>Black 2 piece rayon</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-33</td>
+                  
+                  <td>Black red banarasi</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,300.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-34</td>
+                  
+                  <td>Black Soft Cotton Flared Salwar Set</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-35</td>
+                  
+                  <td>Davani</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-36</td>
+                  
+                  <td>Chanderi soft silk</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-37</td>
+                  
+                  <td>Tussar Embroidary saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-38</td>
+                  
+                  <td>Black 2 piece rayon</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-39</td>
+                  
+                  <td>Imported Rayon Salwar Set peacock blue</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-40</td>
+                  
+                  <td>Linen Salwar Set (Christmas tree)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-41</td>
+                  
+                  <td>Imported Rayon Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,550.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-42</td>
+                  
+                  <td>Linen Floral Salwar Set (sunflower)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹950.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-43</td>
+                  
+                  <td>Black Soft Cotton Flared Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-44</td>
+                  
+                  <td>Green & black cotton silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-45</td>
+                  
+                  <td>Cotton Peach</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-46</td>
+                  
+                  <td>Tusser embroidary saress</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-47</td>
+                  
+                  <td>Mal Chanderi</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-48</td>
+                  
+                  <td>Pink Tussar Emb</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Pink</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-49</td>
+                  
+                  <td>Soft Cotton Salwar set - wine red</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-50</td>
+                  
+                  <td>Black Soft Cotton Flared Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-51</td>
+                  
+                  <td>Mull Cotton Floral print with lace detailing</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Red</td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹799.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-52</td>
+                  
+                  <td>Chanderi Soft Silk Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Ocean Blue</td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,250.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-53</td>
+                  
+                  <td>Hakoba Cotton Chridar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Blue, Black</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-54</td>
+                  
+                  <td>Linen Floral Print Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-55</td>
+                  
+                  <td>Linen Block Print Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-56</td>
+                  
+                  <td>Pakistani Semi Silk Blend</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-57</td>
+                  
+                  <td>Linen Floral Salwar Set (yellow)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-58</td>
+                  
+                  <td>Soft Cotton Salwar set - wine red</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Wine red</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-59</td>
+                  
+                  <td>Silk Blend Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Maroon, Violet</td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-60</td>
+                  
+                  <td>Imported Rayon Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Violet (M,XL)
+Mustard (M)
+Pink (M)
+Grey (M)</td>
+                  
+                  <td>5</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-61</td>
+                  
+                  <td>Cotton Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹750.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-62</td>
+                  
+                  <td>Silk Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-63</td>
+                  
+                  <td>Silk Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-64</td>
+                  
+                  <td>Kota Linen Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-65</td>
+                  
+                  <td>Mulmul Cotton Collection</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-66</td>
+                  
+                  <td>Mul Chanderi Saree with Ajrakh Palu</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-67</td>
+                  
+                  <td>Cotton Blend Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Green/Yellow available</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-68</td>
+                  
+                  <td>Soft Muslin Cotton Chridar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>4</td>
+                  
+                  <td>₹1,700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-69</td>
+                  
+                  <td>Cotton Silk (Green & dusty mauve)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,399.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-70</td>
+                  
+                  <td>Tussar Silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Peach Susmi, other 2 pending</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-71</td>
+                  
+                  <td>Cotton Silk (contrast colors)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-72</td>
+                  
+                  <td>Black 2 pice Rayon</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Nishitha</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹800.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-73</td>
+                  
+                  <td>Linen Blend Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Asha Rose</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-74</td>
+                  
+                  <td>Linen Floral Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Asha Rose</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-75</td>
+                  
+                  <td>Linen Buti</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Susmi</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-76</td>
+                  
+                  <td>Soft cotton white and blue printed salwar suit set (plus size)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-77</td>
+                  
+                  <td>Chanderi silk soft dusty rose/pink kurta suit set with delicate floral prints and light embroiderysalwar 3 piece set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,560.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-78</td>
+                  
+                  <td>Linen blend deep wine/maroon kurta suit with elegant embroidery and a contrasting dupatta</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,495.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-79</td>
+                  
+                  <td>Silk blend 3 piece salwar set(indigo blue)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,700.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-80</td>
+                  
+                  <td>Rayon multicolored printed kurta set with a bold and artistic patchwork-style</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹890.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-81</td>
+                  
+                  <td>Soft cotton salwar 3 piece set - coral pink</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,545.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-82</td>
+                  
+                  <td>Soft cotton with white embroidery/sequence work incl shall (3 piece, beige)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,495.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-83</td>
+                  
+                  <td>Co-ord set short (2 piece) linen blend</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-84</td>
+                  
+                  <td>Soft cotton salwar 3 piece set (Indigo/royal blue) Ajrakh print</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,350.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-85</td>
+                  
+                  <td>Linen Blend cotton Salwar Set- 3 piece (lavender with ajrakh print)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,495.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-86</td>
+                  
+                  <td>Soft cotton buble work salwar - 3 piece set (mustard)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,670.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-87</td>
+                  
+                  <td>Cotton printed Salwar Set - 3 piece (brick red with black elephant)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-88</td>
+                  
+                  <td>Cotton silk saree in green and black</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-89</td>
+                  
+                  <td>Banarasi Silk black & pink</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-90</td>
+                  
+                  <td>Rainbow saree</td>
+                  
+                  <td>saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹689.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-91</td>
+                  
+                  <td>Tissue Silk</td>
+                  
+                  <td>saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹789.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-92</td>
+                  
+                  <td>Kurti blue Jute</td>
+                  
+                  <td>Kurti</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-93</td>
+                  
+                  <td>banarasi silk saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-94</td>
+                  
+                  <td>Khadi stripe saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-95</td>
+                  
+                  <td>Chinon silk saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-96</td>
+                  
+                  <td>Pashmina silk saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-97</td>
+                  
+                  <td>Aanchal - Black and whit salawar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-98</td>
+                  
+                  <td>Aanchal - Red Salwar with black flowers</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-99</td>
+                  
+                  <td>Aanchal - Red salwar with white flower</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-100</td>
+                  
+                  <td>Aanchal yellow salwar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,900.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-101</td>
+                  
+                  <td>Aanchal blue Salwar with white lining (bagru hand printed)</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-102</td>
+                  
+                  <td>Aanchal black & white floral print salwar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,399.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-103</td>
+                  
+                  <td>Aanchal navy blue cotton kurta with red  embriodered detailing</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-104</td>
+                  
+                  <td>Aanchal black Salwar with white printex work</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-105</td>
+                  
+                  <td>Aanchal navy blue embroidered Pakistani Aghanoor cotton 3-piece set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-106</td>
+                  
+                  <td>Aanchal green floral print cotton salwar set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-107</td>
+                  
+                  <td>Aanchal black ajrakh hand block printed salwar set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-108</td>
+                  
+                  <td>Aanchal Rani cotton salwar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-109</td>
+                  
+                  <td>Aanchal Blue & red cotton Azrakh print</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-110</td>
+                  
+                  <td>Aanchal white Anarkali Salwar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-111</td>
+                  
+                  <td>Aanchal Cotton white salwar set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-112</td>
+                  
+                  <td>Aanchal beige cotton salwar with navy blue block-print dupatta</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,300.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-113</td>
+                  
+                  <td>Viscose Rayon Silk Saree (Cocoa brown)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-114</td>
+                  
+                  <td>Viscose Georgette Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>black/purple -1, black/yellow-1, maroon -1</td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹1,599.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-115</td>
+                  
+                  <td>Banarasi Silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Rust orange - 1
+Biscuit - 1</td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-116</td>
+                  
+                  <td>Banarasi Silk (Yellow design)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,400.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-117</td>
+                  
+                  <td>Chanderi Silk Tie & Dye collection</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Blue - 1</td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,500.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-118</td>
+                  
+                  <td>Off-white block-printed silk saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-119</td>
+                  
+                  <td>Chanderi Printed Silk Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Vioiet, navy blue, rani pink</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹699.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-120</td>
+                  
+                  <td>Kalyani cotton silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>yello green & orange green</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,249.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-121</td>
+                  
+                  <td>Roman Silk Salwar Set</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,600.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-122</td>
+                  
+                  <td>Banarasi Silk (Parrot Green)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,380.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-123</td>
+                  
+                  <td>Kalyani cotton silk (red)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Red</td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,249.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-124</td>
+                  
+                  <td>Viscose Chokda</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Blue, Green</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-125</td>
+                  
+                  <td>Aanchal Maroon Salwar</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹2,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-126</td>
+                  
+                  <td>Aanchal maroon palzo kurta</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-127</td>
+                  
+                  <td>⁠Rustic Geo Kota (Stairs) - Net Kota</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-128</td>
+                  
+                  <td>⁠Grey Arrow Kota (Arrow) - Net kota</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,650.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-129</td>
+                  
+                  <td>Dolla silk Olive Green</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,550.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-130</td>
+                  
+                  <td>Chanderi Cotton (Golden Yellow)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,499.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-131</td>
+                  
+                  <td>⁠​Regal Black semi silk Brocade type</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,250.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-132</td>
+                  
+                  <td>Kota Doria (Green with silver floral work)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,000.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-133</td>
+                  
+                  <td>Semi Silk (Peach)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹950.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-134</td>
+                  
+                  <td>Net kota saree - turquoise blue with floral design and maroon border</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹850.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-135</td>
+                  
+                  <td>⁠Viscose Chokda</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Rust orange, burned orange (lotus)</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,250.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-136</td>
+                  
+                  <td>Banarasi silk (lavender)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,380.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-137</td>
+                  
+                  <td>⁠​Blue manipuri silk saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-138</td>
+                  
+                  <td>⁠​Linen black saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,050.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-139</td>
+                  
+                  <td>⁠​Maheswari cotton Silk saree (Red & Pink)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-140</td>
+                  
+                  <td>⁠​Ganga Jamuna kalyani Cotton Saree</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-141</td>
+                  
+                  <td>Semi Silk</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Pink</td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-142</td>
+                  
+                  <td>Semi Silk (Rose Pink)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-143</td>
+                  
+                  <td>Synthetic Net Kota Doria (Soft ivory/off-white - Muted Coral Pink & Olive green floral motifs)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>1</td>
+                  
+                  <td>₹1,100.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-144</td>
+                  
+                  <td>Kota Doria (Natural off-white - Aqua blues-green design)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-145</td>
+                  
+                  <td>Linen Saree with Check (Maroon with golden checks, Green with golden checks, Rust Orange with golden checks)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-146</td>
+                  
+                  <td>Matka Silk Saree (Mustard/gree, Blue/Green, Blue/Red) </td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,200.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-147</td>
+                  
+                  <td>Soft Cotton Saree (with butterfly design on Pallu)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹850.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-148</td>
+                  
+                  <td>SAREES 5619 (Tissue Silk Saree Golden Color)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹1,450.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-149</td>
+                  
+                  <td>SAREE TISSUE EMB (Lavender (light & dark), Red)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td></td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹960.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-150</td>
+                  
+                  <td>CHIKKANKARI SALWAR</td>
+                  
+                  <td>Salwar</td>
+                  
+                  <td>Purple</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,099.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-151</td>
+                  
+                  <td>Short Kurta</td>
+                  
+                  <td>Kurti</td>
+                  
+                  <td>Light Brown colr</td>
+                  
+                  <td>3</td>
+                  
+                  <td>₹580.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td>CHR-152</td>
+                  
+                  <td>Banarasi (Yellow/Green)</td>
+                  
+                  <td>Saree</td>
+                  
+                  <td>Yellow Green</td>
+                  
+                  <td>2</td>
+                  
+                  <td>₹1,380.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                
+                <tr>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td></td>
+                  
+                  <td>0</td>
+                  
+                  <td>₹0.00</td>
+                  
+                </tr>
+                 
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            Quick search for SKU, item name, category, and color. Use Download
+            full Excel for all details.
+          </div>
         </div>
       </div>
     </div>
+
+    <script>
+      function searchInventory() {
+        const input = document
+          .getElementById("inventorySearch")
+          .value.toLowerCase();
+        const rows = document.querySelectorAll("#inventoryTable tbody tr");
+
+        rows.forEach((row) => {
+          row.style.display = row.innerText.toLowerCase().includes(input)
+            ? ""
+            : "none";
+        });
+      }
+    </script>
   </body>
 </html>

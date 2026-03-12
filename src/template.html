@@ -206,6 +206,10 @@
         background: #fee2e2;
       }
 
+      .helper-cell {
+        color: var(--muted);
+      }
+
       /* Plotly charts: improved mobile breathing room */
       .plotly-graph-div {
         width: 100% !important;
@@ -388,7 +392,7 @@
               id="inventorySearch"
               class="search-input"
               placeholder="Search by SKU, item, category, or color..."
-              onkeyup="searchInventory()"
+              oninput="searchInventory()"
             />
           </div>
 
@@ -403,7 +407,7 @@
               </thead>
               <tbody id="inventoryBody">
                 <tr id="inventoryHelper">
-                  <td colspan="{{ inventory_cols|length }}">
+                  <td class="helper-cell" colspan="{{ inventory_cols|length }}">
                     Start typing in the search box to find inventory items.
                   </td>
                 </tr>
@@ -428,22 +432,19 @@
 
     <script>
       function searchInventory() {
-        const input = document
-          .getElementById("inventorySearch")
-          .value.toLowerCase()
-          .trim();
-
-        const rows = document.querySelectorAll(".inventory-row");
+        const inputEl = document.getElementById("inventorySearch");
         const helper = document.getElementById("inventoryHelper");
+        const rows = document.querySelectorAll(".inventory-row");
+        const input = (inputEl?.value || "").toLowerCase().trim();
 
         let visibleCount = 0;
 
         rows.forEach((row) => {
-          const text = row.innerText.toLowerCase();
+          const text = (row.textContent || "").toLowerCase();
 
           row.classList.remove("low-stock", "out-of-stock");
 
-          if (input.length === 0) {
+          if (!input) {
             row.style.display = "none";
             return;
           }
@@ -451,9 +452,8 @@
           if (text.includes(input)) {
             row.style.display = "";
 
-            const cells = row.querySelectorAll("td");
-            const qtyCell = cells[cells.length - 1];
-            const qty = parseInt(qtyCell.innerText, 10) || 0;
+            const qtyCell = row.querySelector("td:nth-child(5)");
+            const qty = parseInt((qtyCell?.textContent || "0").trim(), 10) || 0;
 
             if (qty === 0) {
               row.classList.add("out-of-stock");
@@ -461,23 +461,28 @@
               row.classList.add("low-stock");
             }
 
-            visibleCount++;
+            visibleCount += 1;
           } else {
             row.style.display = "none";
           }
         });
 
-        if (input.length === 0) {
-          helper.innerText =
-            "Start typing in the search box to find inventory items.";
+        if (!input) {
           helper.style.display = "";
+          helper.innerHTML =
+            '<td class="helper-cell" colspan="{{ inventory_cols|length }}">Start typing in the search box to find inventory items.</td>';
         } else if (visibleCount === 0) {
-          helper.innerText = "No matching items found.";
           helper.style.display = "";
+          helper.innerHTML =
+            '<td class="helper-cell" colspan="{{ inventory_cols|length }}">No matching items found.</td>';
         } else {
           helper.style.display = "none";
         }
       }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        searchInventory();
+      });
     </script>
   </body>
 </html>

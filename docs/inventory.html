@@ -1,0 +1,3806 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chiraath Inventory Browser</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+        --radius: 16px;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 24px auto;
+        padding: 0 16px 48px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin: 0;
+        letter-spacing: 0.2px;
+      }
+
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .actions a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        color: var(--text);
+        margin-left: 8px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        background: #fff;
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+      }
+
+      th {
+        background: #fafafa;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .scroll {
+        max-height: 70vh;
+        overflow: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fff;
+      }
+
+      .inventory-search-wrap {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 5;
+        padding-bottom: 8px;
+      }
+
+      .low-stock {
+        background: #fff7ed;
+      }
+
+      .out-of-stock {
+        background: #fee2e2;
+      }
+
+      .helper-cell {
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .actions a {
+          margin-left: 0;
+          margin-right: 8px;
+        }
+
+        .hero {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .wrap {
+          padding: 0 10px 36px;
+        }
+
+        .card {
+          padding: 18px 12px;
+        }
+
+        h2 {
+          font-size: 14px;
+          margin-bottom: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <h1>Chiraath Inventory Browser</h1>
+          <div class="sub">
+            <span class="pill">Last updated: Mar 11, 2026</span>
+            <span class="pill">Qty sold: 185</span>
+            <span class="pill">Qty pending: 124</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="./index.html">Back to Dashboard</a>
+          <a href="./Chiraath-Business-Summary-Latest.xlsx" download>Download full Excel</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Inventory Browser</h2>
+
+        <div class="inventory-search-wrap">
+          <input
+            type="text"
+            id="inventorySearch"
+            class="search-input"
+            placeholder="Search by SKU, item, category, color, or size..."
+          />
+        </div>
+
+        <div class="scroll">
+          <table id="inventoryTable">
+            <thead>
+              <tr>
+                
+                <th>SKU</th>
+                
+                <th>Item Name</th>
+                
+                <th>Category</th>
+                
+                <th>Color</th>
+                
+                <th>Size</th>
+                
+                <th>Qty Pending</th>
+                
+                <th>Sale Amount (₹)</th>
+                
+                <th>Purchase Price (₹)</th>
+                
+              </tr>
+            </thead>
+            <tbody id="inventoryBody">
+              <tr id="inventoryHelperRow">
+                <td
+                  id="inventoryHelperCell"
+                  class="helper-cell"
+                  colspan="8"
+                >
+                  Start typing in the search box to find inventory items.
+                </td>
+              </tr>
+
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-1</td>
+                
+                <td>Black Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,250.00</td>
+                
+                <td>₹779.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-2</td>
+                
+                <td>Imported Rayon Salwar Black</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-3</td>
+                
+                <td>Cotton Silk</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,000.00</td>
+                
+                <td>₹1,048.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-4</td>
+                
+                <td>Silk Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹887.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-5</td>
+                
+                <td>Light weight cotton</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹750.00</td>
+                
+                <td>₹372.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-6</td>
+                
+                <td>Saree USA print (step photo)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹625.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-7</td>
+                
+                <td>Saree 95 1</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,600.00</td>
+                
+                <td>₹1,559.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-8</td>
+                
+                <td>Linen Block Print Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-9</td>
+                
+                <td>Cotton Silk</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,000.00</td>
+                
+                <td>₹1,148.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-10</td>
+                
+                <td>Black red banarasi</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,800.00</td>
+                
+                <td>₹1,252.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-11</td>
+                
+                <td>Black Imported Rayon Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-12</td>
+                
+                <td>Imported Rayon Salwar Set Red</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-13</td>
+                
+                <td>Silk Blend Salwar set - Blue</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,080.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-14</td>
+                
+                <td>Linen Block Print Salwar Set (sunflower)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-15</td>
+                
+                <td>Linen Salwar Set (Christmas tree)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-16</td>
+                
+                <td>Mul mul cotton</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹779.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-17</td>
+                
+                <td>Saree 95 1</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,700.00</td>
+                
+                <td>₹1,559.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-18</td>
+                
+                <td>Silk Blend Salwar set - gray</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-19</td>
+                
+                <td>Linen Salwar Set (Christmas tree)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-20</td>
+                
+                <td>Linen Block Print Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-21</td>
+                
+                <td>violet sil saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,300.00</td>
+                
+                <td>₹887.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-22</td>
+                
+                <td>Cotton Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹900.00</td>
+                
+                <td>₹562.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-23</td>
+                
+                <td>Light weight cotton</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹750.00</td>
+                
+                <td>₹372.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-24</td>
+                
+                <td>Light weight cotton</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹700.00</td>
+                
+                <td>₹372.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-25</td>
+                
+                <td>Kota Linen Saree - biege & maroon</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,200.00</td>
+                
+                <td>₹1,669.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-26</td>
+                
+                <td>Light weight cotton</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹700.00</td>
+                
+                <td>₹372.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-27</td>
+                
+                <td>Kota Linen Saree - green silver</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹2,600.00</td>
+                
+                <td>₹1,669.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-28</td>
+                
+                <td>Linen Floral Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-29</td>
+                
+                <td>Hakoba Cotton Chridar - brown</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,800.00</td>
+                
+                <td>₹1,476.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-30</td>
+                
+                <td>Black 2 piece rayon</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹600.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-31</td>
+                
+                <td>Linen Block Print Salwar Set (violet)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-32</td>
+                
+                <td>Black 2 piece rayon</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹800.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-33</td>
+                
+                <td>Black red banarasi</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,300.00</td>
+                
+                <td>₹867.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-34</td>
+                
+                <td>Black Soft Cotton Flared Salwar Set</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,165.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-35</td>
+                
+                <td>Davani</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,250.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-36</td>
+                
+                <td>Chanderi soft silk</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,800.00</td>
+                
+                <td>₹1,941.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-37</td>
+                
+                <td>Tussar Embroidary saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,700.00</td>
+                
+                <td>₹1,094.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-38</td>
+                
+                <td>Black 2 piece rayon</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹800.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-39</td>
+                
+                <td>Imported Rayon Salwar Set peacock blue</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-40</td>
+                
+                <td>Linen Salwar Set (Christmas tree)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-41</td>
+                
+                <td>Imported Rayon Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,550.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-42</td>
+                
+                <td>Linen Floral Salwar Set (sunflower)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹950.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-43</td>
+                
+                <td>Black Soft Cotton Flared Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>XXL</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,165.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-44</td>
+                
+                <td>Green & black cotton silk</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,900.00</td>
+                
+                <td>₹1,048.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-45</td>
+                
+                <td>Cotton Peach</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹650.00</td>
+                
+                <td>₹372.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-46</td>
+                
+                <td>Tusser embroidary saress</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,094.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-47</td>
+                
+                <td>Mal Chanderi</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹779.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-48</td>
+                
+                <td>Pink Tussar Emb</td>
+                
+                <td>Saree</td>
+                
+                <td>Pink</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹895.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-49</td>
+                
+                <td>Soft Cotton Salwar set - wine red</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,145.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-50</td>
+                
+                <td>Black Soft Cotton Flared Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,165.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-51</td>
+                
+                <td>Mull Cotton Floral print with lace detailing</td>
+                
+                <td>Salwar</td>
+                
+                <td>Red</td>
+                
+                <td>M, L, XXL</td>
+                
+                <td>3</td>
+                
+                <td>₹799.00</td>
+                
+                <td>₹1,200.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-52</td>
+                
+                <td>Chanderi Soft Silk Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td>Ocean Blue</td>
+                
+                <td>XL</td>
+                
+                <td>1</td>
+                
+                <td>₹1,250.00</td>
+                
+                <td>₹1,941.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-53</td>
+                
+                <td>Hakoba Cotton Chridar</td>
+                
+                <td>Salwar</td>
+                
+                <td>Blue, Black</td>
+                
+                <td>L</td>
+                
+                <td>2</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,476.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-54</td>
+                
+                <td>Linen Floral Print Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>1</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-55</td>
+                
+                <td>Linen Block Print Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>XL-XXL</td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-56</td>
+                
+                <td>Pakistani Semi Silk Blend</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M-XL</td>
+                
+                <td>3</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,095.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-57</td>
+                
+                <td>Linen Floral Salwar Set (yellow)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L, XL</td>
+                
+                <td>2</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-58</td>
+                
+                <td>Soft Cotton Salwar set - wine red</td>
+                
+                <td>Salwar</td>
+                
+                <td>Wine red</td>
+                
+                <td>M, XXL</td>
+                
+                <td>2</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,145.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-59</td>
+                
+                <td>Silk Blend Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td>Maroon, Violet</td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹1,080.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-60</td>
+                
+                <td>Imported Rayon Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td>Violet (M,XL)
+Mustard (M)
+Pink (M)
+Grey (M)</td>
+                
+                <td></td>
+                
+                <td>5</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,096.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-61</td>
+                
+                <td>Cotton Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹750.00</td>
+                
+                <td>₹562.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-62</td>
+                
+                <td>Silk Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹700.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-63</td>
+                
+                <td>Silk Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹972.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-64</td>
+                
+                <td>Kota Linen Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,800.00</td>
+                
+                <td>₹1,602.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-65</td>
+                
+                <td>Mulmul Cotton Collection</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹900.00</td>
+                
+                <td>₹779.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-66</td>
+                
+                <td>Mul Chanderi Saree with Ajrakh Palu</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹633.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-67</td>
+                
+                <td>Cotton Blend Saree</td>
+                
+                <td>Saree</td>
+                
+                <td>Green/Yellow available</td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹685.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-68</td>
+                
+                <td>Soft Muslin Cotton Chridar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M-XXL</td>
+                
+                <td>4</td>
+                
+                <td>₹1,700.00</td>
+                
+                <td>₹1,700.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-69</td>
+                
+                <td>Cotton Silk (Green & dusty mauve)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,399.00</td>
+                
+                <td>₹1,148.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-70</td>
+                
+                <td>Tussar Silk</td>
+                
+                <td>Saree</td>
+                
+                <td>Peach Susmi, other 2 pending</td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹857.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-71</td>
+                
+                <td>Cotton Silk (contrast colors)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,900.00</td>
+                
+                <td>₹1,198.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-72</td>
+                
+                <td>Black 2 pice Rayon</td>
+                
+                <td>Salwar</td>
+                
+                <td>Nishitha</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹800.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-73</td>
+                
+                <td>Linen Blend Saree</td>
+                
+                <td>Saree</td>
+                
+                <td>Asha Rose</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹600.00</td>
+                
+                <td>₹450.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-74</td>
+                
+                <td>Linen Floral Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td>Asha Rose</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹1,000.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-75</td>
+                
+                <td>Linen Buti</td>
+                
+                <td>Saree</td>
+                
+                <td>Susmi</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,900.00</td>
+                
+                <td>₹1,900.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-76</td>
+                
+                <td>Soft cotton white and blue printed salwar suit set (plus size)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: XL, XXL</td>
+                
+                <td>2</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹995.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-77</td>
+                
+                <td>Chanderi silk soft dusty rose/pink kurta suit set with delicate floral prints and light embroiderysalwar 3 piece set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: M, L</td>
+                
+                <td>2</td>
+                
+                <td>₹1,560.00</td>
+                
+                <td>₹1,075.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-78</td>
+                
+                <td>Linen blend deep wine/maroon kurta suit with elegant embroidery and a contrasting dupatta</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: M</td>
+                
+                <td>1</td>
+                
+                <td>₹1,495.00</td>
+                
+                <td>₹1,045.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-79</td>
+                
+                <td>Silk blend 3 piece salwar set(indigo blue)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: M, XXL</td>
+                
+                <td>2</td>
+                
+                <td>₹1,700.00</td>
+                
+                <td>₹1,230.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-80</td>
+                
+                <td>Rayon multicolored printed kurta set with a bold and artistic patchwork-style</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: XXL</td>
+                
+                <td>1</td>
+                
+                <td>₹890.00</td>
+                
+                <td>₹595.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-81</td>
+                
+                <td>Soft cotton salwar 3 piece set - coral pink</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,545.00</td>
+                
+                <td>₹1,075.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-82</td>
+                
+                <td>Soft cotton with white embroidery/sequence work incl shall (3 piece, beige)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: L, XL, XXL</td>
+                
+                <td>0</td>
+                
+                <td>₹1,495.00</td>
+                
+                <td>₹1,004.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-83</td>
+                
+                <td>Co-ord set short (2 piece) linen blend</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: L, XL</td>
+                
+                <td>2</td>
+                
+                <td>₹650.00</td>
+                
+                <td>₹450.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-84</td>
+                
+                <td>Soft cotton salwar 3 piece set (Indigo/royal blue) Ajrakh print</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>XXL</td>
+                
+                <td>1</td>
+                
+                <td>₹1,350.00</td>
+                
+                <td>₹895.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-85</td>
+                
+                <td>Linen Blend cotton Salwar Set- 3 piece (lavender with ajrakh print)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: M, L</td>
+                
+                <td>2</td>
+                
+                <td>₹1,495.00</td>
+                
+                <td>₹1,045.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-86</td>
+                
+                <td>Soft cotton buble work salwar - 3 piece set (mustard)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size: M, L,XL </td>
+                
+                <td>2</td>
+                
+                <td>₹1,670.00</td>
+                
+                <td>₹1,195.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-87</td>
+                
+                <td>Cotton printed Salwar Set - 3 piece (brick red with black elephant)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>Size - M,XXL</td>
+                
+                <td>1</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹795.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-88</td>
+                
+                <td>Cotton silk saree in green and black</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,900.00</td>
+                
+                <td>₹1,048.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-89</td>
+                
+                <td>Banarasi Silk black & pink</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹1,195.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-90</td>
+                
+                <td>Rainbow saree</td>
+                
+                <td>saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹689.00</td>
+                
+                <td>₹389.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-91</td>
+                
+                <td>Tissue Silk</td>
+                
+                <td>saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹789.00</td>
+                
+                <td>₹489.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-92</td>
+                
+                <td>Kurti blue Jute</td>
+                
+                <td>Kurti</td>
+                
+                <td></td>
+                
+                <td>L, XXL</td>
+                
+                <td>2</td>
+                
+                <td>₹650.00</td>
+                
+                <td>₹472.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-93</td>
+                
+                <td>banarasi silk saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹892.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-94</td>
+                
+                <td>Khadi stripe saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹600.00</td>
+                
+                <td>₹340.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-95</td>
+                
+                <td>Chinon silk saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹1,250.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-96</td>
+                
+                <td>Pashmina silk saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹1,250.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-97</td>
+                
+                <td>Aanchal - Black and whit salawar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,300.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-98</td>
+                
+                <td>Aanchal - Red Salwar with black flowers</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,160.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-99</td>
+                
+                <td>Aanchal - Red salwar with white flower</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,300.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-100</td>
+                
+                <td>Aanchal yellow salwar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,900.00</td>
+                
+                <td>₹1,622.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-101</td>
+                
+                <td>Aanchal blue Salwar with white lining (bagru hand printed)</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,092.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-102</td>
+                
+                <td>Aanchal black & white floral print salwar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,399.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-103</td>
+                
+                <td>Aanchal navy blue cotton kurta with red  embriodered detailing</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-104</td>
+                
+                <td>Aanchal black Salwar with white printex work</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-105</td>
+                
+                <td>Aanchal navy blue embroidered Pakistani Aghanoor cotton 3-piece set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-106</td>
+                
+                <td>Aanchal green floral print cotton salwar set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-107</td>
+                
+                <td>Aanchal black ajrakh hand block printed salwar set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-108</td>
+                
+                <td>Aanchal Rani cotton salwar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-109</td>
+                
+                <td>Aanchal Blue & red cotton Azrakh print</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-110</td>
+                
+                <td>Aanchal white Anarkali Salwar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-111</td>
+                
+                <td>Aanchal Cotton white salwar set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>1</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-112</td>
+                
+                <td>Aanchal beige cotton salwar with navy blue block-print dupatta</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,300.00</td>
+                
+                <td>₹976.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-113</td>
+                
+                <td>Viscose Rayon Silk Saree (Cocoa brown)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,118.26</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-114</td>
+                
+                <td>Viscose Georgette Saree</td>
+                
+                <td>Saree</td>
+                
+                <td>black/purple -1, black/yellow-1, maroon -1</td>
+                
+                <td></td>
+                
+                <td>3</td>
+                
+                <td>₹1,599.00</td>
+                
+                <td>₹1,254.76</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-115</td>
+                
+                <td>Banarasi Silk</td>
+                
+                <td>Saree</td>
+                
+                <td>Rust orange - 1
+Biscuit - 1</td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹891.50</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-116</td>
+                
+                <td>Banarasi Silk (Yellow design)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,400.00</td>
+                
+                <td>₹891.46</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-117</td>
+                
+                <td>Chanderi Silk Tie & Dye collection</td>
+                
+                <td>Saree</td>
+                
+                <td>Blue - 1</td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,500.00</td>
+                
+                <td>₹1,047.90</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-118</td>
+                
+                <td>Off-white block-printed silk saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹870.46</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-119</td>
+                
+                <td>Chanderi Printed Silk Saree</td>
+                
+                <td>Saree</td>
+                
+                <td>Vioiet, navy blue, rani pink</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹699.00</td>
+                
+                <td>₹418.95</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-120</td>
+                
+                <td>Kalyani cotton silk</td>
+                
+                <td>Saree</td>
+                
+                <td>yello green & orange green</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,249.00</td>
+                
+                <td>₹817.95</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-121</td>
+                
+                <td>Roman Silk Salwar Set</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L</td>
+                
+                <td>2</td>
+                
+                <td>₹1,600.00</td>
+                
+                <td>₹1,175.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-122</td>
+                
+                <td>Banarasi Silk (Parrot Green)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,380.00</td>
+                
+                <td>₹891.44</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-123</td>
+                
+                <td>Kalyani cotton silk (red)</td>
+                
+                <td>Saree</td>
+                
+                <td>Red</td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,249.00</td>
+                
+                <td>₹807.45</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-124</td>
+                
+                <td>Viscose Chokda</td>
+                
+                <td>Saree</td>
+                
+                <td>Blue, Green</td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹908.25</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-125</td>
+                
+                <td>Aanchal Maroon Salwar</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>XXXL</td>
+                
+                <td>1</td>
+                
+                <td>₹2,100.00</td>
+                
+                <td>₹1,760.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-126</td>
+                
+                <td>Aanchal maroon palzo kurta</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>L</td>
+                
+                <td>0</td>
+                
+                <td>₹1,650.00</td>
+                
+                <td>₹1,330.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-127</td>
+                
+                <td>⁠Rustic Geo Kota (Stairs) - Net Kota</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,650.00</td>
+                
+                <td>₹1,155.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-128</td>
+                
+                <td>⁠Grey Arrow Kota (Arrow) - Net kota</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,650.00</td>
+                
+                <td>₹1,155.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-129</td>
+                
+                <td>Dolla silk Olive Green</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,550.00</td>
+                
+                <td>₹755.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-130</td>
+                
+                <td>Chanderi Cotton (Golden Yellow)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,499.00</td>
+                
+                <td>₹975.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-131</td>
+                
+                <td>⁠​Regal Black semi silk Brocade type</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,250.00</td>
+                
+                <td>₹450.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-132</td>
+                
+                <td>Kota Doria (Green with silver floral work)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,000.00</td>
+                
+                <td>₹500.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-133</td>
+                
+                <td>Semi Silk (Peach)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹950.00</td>
+                
+                <td>₹500.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-134</td>
+                
+                <td>Net kota saree - turquoise blue with floral design and maroon border</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹850.00</td>
+                
+                <td>₹450.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-135</td>
+                
+                <td>⁠Viscose Chokda</td>
+                
+                <td>Saree</td>
+                
+                <td>Rust orange, burned orange (lotus)</td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,250.00</td>
+                
+                <td>₹908.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-136</td>
+                
+                <td>Banarasi silk (lavender)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,380.00</td>
+                
+                <td>₹891.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-137</td>
+                
+                <td>⁠​Blue manipuri silk saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹814.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-138</td>
+                
+                <td>⁠​Linen black saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,050.00</td>
+                
+                <td>₹754.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-139</td>
+                
+                <td>⁠​Maheswari cotton Silk saree (Red & Pink)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹699.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-140</td>
+                
+                <td>⁠​Ganga Jamuna kalyani Cotton Saree</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹838.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-141</td>
+                
+                <td>Semi Silk</td>
+                
+                <td>Saree</td>
+                
+                <td>Pink</td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹600.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-142</td>
+                
+                <td>Semi Silk (Rose Pink)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹550.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-143</td>
+                
+                <td>Synthetic Net Kota Doria (Soft ivory/off-white - Muted Coral Pink & Olive green floral motifs)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>1</td>
+                
+                <td>₹1,100.00</td>
+                
+                <td>₹550.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-144</td>
+                
+                <td>Kota Doria (Natural off-white - Aqua blues-green design)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹1,100.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-145</td>
+                
+                <td>Linen Saree with Check (Maroon with golden checks, Green with golden checks, Rust Orange with golden checks)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>3</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹761.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-146</td>
+                
+                <td>Matka Silk Saree (Mustard/gree, Blue/Green, Blue/Red) </td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,200.00</td>
+                
+                <td>₹719.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-147</td>
+                
+                <td>Soft Cotton Saree (with butterfly design on Pallu)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹850.00</td>
+                
+                <td>₹502.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-148</td>
+                
+                <td>SAREES 5619 (Tissue Silk Saree Golden Color)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>3</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹1,024.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-149</td>
+                
+                <td>SAREE TISSUE EMB (Lavender (light & dark), Red)</td>
+                
+                <td>Saree</td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>3</td>
+                
+                <td>₹960.00</td>
+                
+                <td>₹688.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-150</td>
+                
+                <td>CHIKKANKARI SALWAR</td>
+                
+                <td>Salwar</td>
+                
+                <td>Purple</td>
+                
+                <td>XL, XXL</td>
+                
+                <td>2</td>
+                
+                <td>₹1,099.00</td>
+                
+                <td>₹645.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-151</td>
+                
+                <td>Short Kurta</td>
+                
+                <td>Kurti</td>
+                
+                <td>Light Brown colr</td>
+                
+                <td>L,XL,XXL</td>
+                
+                <td>3</td>
+                
+                <td>₹580.00</td>
+                
+                <td>₹295.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-152</td>
+                
+                <td>Banarasi (Yellow/Green)</td>
+                
+                <td>Saree</td>
+                
+                <td>Yellow Green</td>
+                
+                <td></td>
+                
+                <td>2</td>
+                
+                <td>₹1,380.00</td>
+                
+                <td>₹891.50</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-153</td>
+                
+                <td>Ivory & black printed cotton 3-piece salwar set | M-XL </td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL</td>
+                
+                <td>3</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹949.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-154</td>
+                
+                <td>Dark brown embroidered cotton 3-piece salwar set | M-XL</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL</td>
+                
+                <td>3</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹949.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-155</td>
+                
+                <td>Black cotton 3-piece salwar set with printed dupatta | M-XXL</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL, XXL</td>
+                
+                <td>4</td>
+                
+                <td>₹1,550.00</td>
+                
+                <td>₹950.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-155</td>
+                
+                <td>Off-white cotton 2-piece set with blue floral prints | M, L, XL, XXL</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL, XXL</td>
+                
+                <td>4</td>
+                
+                <td>₹850.00</td>
+                
+                <td>₹525.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-156</td>
+                
+                <td>Off-white printed 2-piece kurti set with multicolor pattern | M-XXXL</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL, XXL, XXXL</td>
+                
+                <td>5</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td>CHR-157</td>
+                
+                <td>Olive green cotton 2-piece kurti set with floral prints | M-XXXL</td>
+                
+                <td>Salwar</td>
+                
+                <td></td>
+                
+                <td>M, L, XL, XXL, XXXL</td>
+                
+                <td>5</td>
+                
+                <td>₹1,450.00</td>
+                
+                <td>₹839.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+              <tr class="inventory-row">
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td></td>
+                
+                <td>0</td>
+                
+                <td>₹0.00</td>
+                
+                <td>₹0.00</td>
+                
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          Search across SKU, item name, category, color, and size. Rows show
+          only after search.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function searchInventory() {
+        const inputEl = document.getElementById("inventorySearch");
+        const helperRow = document.getElementById("inventoryHelperRow");
+        const helperCell = document.getElementById("inventoryHelperCell");
+        const rows = document.querySelectorAll(".inventory-row");
+        const input = (inputEl.value || "").toLowerCase().trim();
+
+        let visibleCount = 0;
+
+        rows.forEach((row) => {
+          const text = (row.textContent || "").toLowerCase();
+
+          row.classList.remove("low-stock", "out-of-stock");
+
+          if (!input) {
+            row.style.display = "none";
+            return;
+          }
+
+          if (text.includes(input)) {
+            row.style.display = "table-row";
+
+            const qtyCell = row.querySelector("td:nth-child(6)");
+            const qty = parseInt((qtyCell?.textContent || "0").trim(), 10) || 0;
+
+            if (qty === 0) {
+              row.classList.add("out-of-stock");
+            } else if (qty === 1) {
+              row.classList.add("low-stock");
+            }
+
+            visibleCount += 1;
+          } else {
+            row.style.display = "none";
+          }
+        });
+
+        if (!input) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent =
+            "Start typing in the search box to find inventory items.";
+        } else if (visibleCount === 0) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent = "No matching items found.";
+        } else {
+          helperRow.style.display = "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputEl = document.getElementById("inventorySearch");
+        const rows = document.querySelectorAll(".inventory-row");
+
+        rows.forEach((row) => {
+          row.style.display = "none";
+        });
+
+        inputEl.addEventListener("input", searchInventory);
+        searchInventory();
+      });
+    </script>
+  </body>
+</html>

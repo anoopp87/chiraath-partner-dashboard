@@ -156,7 +156,9 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     qty_pending = ws_dash[CELL_QTY_PENDING].value
 
     # Tables
-    contrib_df = df_from_range(ws_sum, CONTRIB_HEADER_ROW, CONTRIB_DATA_ROWS, CONTRIB_COLS)
+    contrib_df = df_from_range(
+        ws_sum, CONTRIB_HEADER_ROW, CONTRIB_DATA_ROWS, CONTRIB_COLS
+    )
     contrib_df = contrib_df.iloc[:, [0, -2, -1]]
 
     cash_df = df_from_range(ws_sum, CASH_HEADER_ROW, CASH_DATA_ROWS, CASH_COLS)
@@ -167,24 +169,29 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         if c in month_df.columns:
             month_df[c] = pd.to_numeric(month_df[c], errors="coerce").fillna(0)
 
-    cat_qty_df = df_from_range(ws_dash, CATQTY_HEADER_ROW, CATQTY_DATA_ROWS, CATQTY_COLS)
+    cat_qty_df = df_from_range(
+        ws_dash, CATQTY_HEADER_ROW, CATQTY_DATA_ROWS, CATQTY_COLS
+    )
     for c in ["Qty Sold", "Qty Pending"]:
         if c in cat_qty_df.columns:
             cat_qty_df[c] = pd.to_numeric(cat_qty_df[c], errors="coerce").fillna(0)
 
-    pending_val_df = df_from_range(ws_dash, PENDVAL_HEADER_ROW, PENDVAL_DATA_ROWS, PENDVAL_COLS)
+    pending_val_df = df_from_range(
+        ws_dash, PENDVAL_HEADER_ROW, PENDVAL_DATA_ROWS, PENDVAL_COLS
+    )
     if "Pending Value (₹)" in pending_val_df.columns:
         pending_val_df["Pending Value (₹)"] = pd.to_numeric(
             pending_val_df["Pending Value (₹)"], errors="coerce"
         ).fillna(0)
 
-    # Inventory
+    # Inventory source data
     inventory_rows = list(ws_inventory.values)
     if inventory_rows:
-        inventory_df = pd.DataFrame(inventory_rows[1:], columns=inventory_rows[0])
+        inventory_source_df = pd.DataFrame(inventory_rows[1:], columns=inventory_rows[0])
     else:
-        inventory_df = pd.DataFrame()
+        inventory_source_df = pd.DataFrame()
 
+    # Inventory table columns to display
     desired_inventory_cols = [
         "SKU",
         "Item Name",
@@ -194,13 +201,15 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         "Qty Pending",
         "Sale Amount (₹)",
         "Purchase Price (₹)",
-        "Buyer"
+        "Buyer",
     ]
 
-    available_inventory_cols = [c for c in desired_inventory_cols if c in inventory_df.columns]
+    available_inventory_cols = [
+        c for c in desired_inventory_cols if c in inventory_source_df.columns
+    ]
 
     if available_inventory_cols:
-        inventory_df = inventory_df[available_inventory_cols].copy()
+        inventory_df = inventory_source_df[available_inventory_cols].copy()
 
         if "Qty Pending" in inventory_df.columns:
             inventory_df["Qty Pending"] = pd.to_numeric(
@@ -215,8 +224,42 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         inventory_records = inventory_df.to_dict(orient="records")
         inventory_cols = list(inventory_df.columns)
     else:
+        inventory_df = pd.DataFrame()
         inventory_records = []
         inventory_cols = desired_inventory_cols
+
+    # Inventory summary cards (unit based)
+    if not inventory_source_df.empty:
+        qty_purchased = pd.to_numeric(
+            inventory_source_df["Qty Purchased"]
+            if "Qty Purchased" in inventory_source_df.columns
+            else pd.Series(0, index=inventory_source_df.index),
+            errors="coerce",
+        ).fillna(0)
+
+        qty_sold_series = pd.to_numeric(
+            inventory_source_df["Qty Sold"]
+            if "Qty Sold" in inventory_source_df.columns
+            else pd.Series(0, index=inventory_source_df.index),
+            errors="coerce",
+        ).fillna(0)
+
+        qty_pending_series = pd.to_numeric(
+            inventory_source_df["Qty Pending"]
+            if "Qty Pending" in inventory_source_df.columns
+            else pd.Series(0, index=inventory_source_df.index),
+            errors="coerce",
+        ).fillna(0)
+
+        inventory_total_items = int(qty_purchased.sum())
+        inventory_in_stock = int(qty_pending_series.sum())
+        inventory_sold_out = int(qty_sold_series.sum())
+        inventory_low_stock = int((qty_pending_series == 1).sum())
+    else:
+        inventory_total_items = 0
+        inventory_in_stock = 0
+        inventory_low_stock = 0
+        inventory_sold_out = 0
 
     # Charts
     charts = {}
@@ -271,7 +314,11 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold")
         )
         fig_cat_qty.add_trace(
-            go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Pending"], name="Qty Pending")
+            go.Bar(
+                x=cat_qty_df["Category"],
+                y=cat_qty_df["Qty Pending"],
+                name="Qty Pending",
+            )
         )
         fig_cat_qty.update_layout(barmode="stack", title="Quantity by Category")
         charts["cat_qty"] = pio.to_html(
@@ -319,9 +366,13 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         last_updated=last_updated,
         qty_sold=int(qty_sold) if qty_sold is not None else "—",
         qty_pending=int(qty_pending) if qty_pending is not None else "—",
-        excel_filename=excel_filename,
         inventory_cols=inventory_cols,
         inventory_records=inventory_records,
+        inventory_total_items=inventory_total_items,
+        inventory_in_stock=inventory_in_stock,
+        inventory_low_stock=inventory_low_stock,
+        inventory_sold_out=inventory_sold_out,
+        excel_filename=excel_filename,
     )
 
     dashboard_html = tpl_dashboard.render(
@@ -346,6 +397,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     (dist_dir / "index.html").write_text(dashboard_html, encoding="utf-8")
     (dist_dir / "inventory.html").write_text(inventory_html, encoding="utf-8")
 
+    # Copy excel for download button
     shutil.copyfile(input_xlsx, dist_dir / excel_filename)
 
     print(f"✅ Built dashboard: {dist_dir / 'index.html'}")

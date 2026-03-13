@@ -66,6 +66,38 @@
         margin-left: 8px;
       }
 
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .kpi .label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .kpi .value {
+        font-size: 24px;
+        font-weight: 750;
+        margin-top: 6px;
+      }
+
+      .kpi .hint {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+      }
+
       .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -125,12 +157,40 @@
       .search-input {
         width: 100%;
         box-sizing: border-box;
-        padding: 10px 12px;
+        padding: 12px 14px;
         margin-bottom: 10px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        font-size: 13px;
+        border: 2px solid #6366f1;
+        border-radius: 12px;
+        font-size: 14px;
         background: #fff;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+
+      .search-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      }
+      @keyframes searchPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+        }
+      }
+
+      .search-highlight {
+        animation: searchPulse 2s ease-out;
+      }
+      .search-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 6px;
       }
 
       .inventory-search-wrap {
@@ -162,6 +222,10 @@
         .hero {
           align-items: flex-start;
           flex-direction: column;
+        }
+
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
@@ -202,11 +266,12 @@
         <h2>Inventory Browser</h2>
 
         <div class="inventory-search-wrap">
+          <div class="search-label">🔎 Search Inventory</div>
           <input
             type="text"
             id="inventorySearch"
             class="search-input"
-            placeholder="Search by SKU, item, category, color, or size..."
+            placeholder="Type SKU like CHR-120 or item name, category, color, size..."
           />
         </div>
 
@@ -244,6 +309,32 @@
         <div class="note">
           Search across SKU, item name, category, color, and size. Rows show
           only after search.
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Total Purchased</div>
+          <div class="value">{{ inventory_total_items }}</div>
+          <div class="hint">Sum of Qty Purchased</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Units In Stock</div>
+          <div class="value">{{ inventory_in_stock }}</div>
+          <div class="hint">Sum of Qty Pending</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Low Stock</div>
+          <div class="value">{{ inventory_low_stock }}</div>
+          <div class="hint">SKUs with Qty Pending = 1</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Units Sold</div>
+          <div class="value">{{ inventory_sold_out }}</div>
+          <div class="hint">Sum of Qty Sold</div>
         </div>
       </div>
     </div>
@@ -305,6 +396,13 @@
         rows.forEach((row) => {
           row.style.display = "none";
         });
+
+        inputEl.focus();
+        inputEl.classList.add("search-highlight");
+
+        setTimeout(() => {
+          inputEl.classList.remove("search-highlight");
+        }, 2000);
 
         inputEl.addEventListener("input", searchInventory);
         searchInventory();

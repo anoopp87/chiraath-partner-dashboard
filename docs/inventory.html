@@ -66,6 +66,38 @@
         margin-left: 8px;
       }
 
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+      }
+
+      .kpi .label {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .kpi .value {
+        font-size: 24px;
+        font-weight: 750;
+        margin-top: 6px;
+      }
+
+      .kpi .hint {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+      }
+
       .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -163,6 +195,10 @@
           align-items: flex-start;
           flex-direction: column;
         }
+
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       @media (max-width: 600px) {
@@ -195,6 +231,32 @@
         <div class="actions">
           <a href="./index.html">Back to Dashboard</a>
           <a href="./Chiraath-Business-Summary-Latest.xlsx" download>Download full Excel</a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Total Purchased</div>
+          <div class="value">309</div>
+          <div class="hint">Sum of Qty Purchased</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Units In Stock</div>
+          <div class="value">121</div>
+          <div class="hint">Sum of Qty Pending</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Low Stock</div>
+          <div class="value">27</div>
+          <div class="hint">SKUs with Qty Pending = 1</div>
+        </div>
+
+        <div class="kpi">
+          <div class="label">Units Sold</div>
+          <div class="value">188</div>
+          <div class="hint">Sum of Qty Sold</div>
         </div>
       </div>
 

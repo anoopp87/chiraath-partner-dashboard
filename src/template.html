@@ -123,10 +123,6 @@
         grid-column: span 5;
       }
 
-      .span-12 {
-        grid-column: 1 / -1;
-      }
-
       h2 {
         margin: 0 0 10px;
         font-size: 15px;
@@ -175,37 +171,6 @@
         margin-top: 10px;
       }
 
-      .search-input {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px 12px;
-        margin-bottom: 10px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        font-size: 13px;
-        background: #fff;
-      }
-
-      .inventory-search-wrap {
-        position: sticky;
-        top: 0;
-        background: var(--card);
-        z-index: 5;
-        padding-bottom: 8px;
-      }
-
-      .low-stock {
-        background: #fff7ed;
-      }
-
-      .out-of-stock {
-        background: #fee2e2;
-      }
-
-      .helper-cell {
-        color: var(--muted);
-      }
-
       .plotly-graph-div {
         width: 100% !important;
         min-height: 380px !important;
@@ -227,8 +192,7 @@
 
         .span-6,
         .span-7,
-        .span-5,
-        .span-12 {
+        .span-5 {
           grid-column: 1 / -1;
         }
 
@@ -275,6 +239,7 @@
           </div>
         </div>
         <div class="actions">
+          <a href="./inventory.html">Inventory Browser</a>
           <a href="./{{ excel_filename }}" download>Download full Excel</a>
         </div>
       </div>
@@ -377,118 +342,7 @@
           <h2>Pending Stock Value by Category</h2>
           {{ chart_pending_val | safe }}
         </div>
-
-        <div class="card span-12 inventory-card">
-          <h2>Inventory Browser</h2>
-
-          <div class="inventory-search-wrap">
-            <input
-              type="text"
-              id="inventorySearch"
-              class="search-input"
-              placeholder="Search by SKU, item, category, or color..."
-            />
-          </div>
-
-          <div class="scroll">
-            <table id="inventoryTable">
-              <thead>
-                <tr>
-                  {% for c in inventory_cols %}
-                  <th>{{ c }}</th>
-                  {% endfor %}
-                </tr>
-              </thead>
-              <tbody id="inventoryBody">
-                <tr id="inventoryHelperRow">
-                  <td
-                    id="inventoryHelperCell"
-                    class="helper-cell"
-                    colspan="{{ inventory_cols|length }}"
-                  >
-                    Start typing in the search box to find inventory items.
-                  </td>
-                </tr>
-
-                {% for r in inventory_records %}
-                <tr class="inventory-row">
-                  {% for c in inventory_cols %}
-                  <td>{{ r[c] }}</td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="note">
-            Quick search for SKU, item name, category, and color.
-          </div>
-        </div>
       </div>
     </div>
-
-    <script>
-      function searchInventory() {
-        const inputEl = document.getElementById("inventorySearch");
-        const helperRow = document.getElementById("inventoryHelperRow");
-        const helperCell = document.getElementById("inventoryHelperCell");
-        const rows = document.querySelectorAll(".inventory-row");
-        const input = (inputEl.value || "").toLowerCase().trim();
-
-        let visibleCount = 0;
-
-        rows.forEach((row) => {
-          const text = (row.textContent || "").toLowerCase();
-
-          row.classList.remove("low-stock", "out-of-stock");
-
-          if (!input) {
-            row.style.display = "none";
-            return;
-          }
-
-          if (text.includes(input)) {
-            row.style.display = "table-row";
-
-            const qtyCell = row.querySelector("td:nth-child(5)");
-            const qty = parseInt((qtyCell?.textContent || "0").trim(), 10) || 0;
-
-            if (qty === 0) {
-              row.classList.add("out-of-stock");
-            } else if (qty === 1) {
-              row.classList.add("low-stock");
-            }
-
-            visibleCount += 1;
-          } else {
-            row.style.display = "none";
-          }
-        });
-
-        if (!input) {
-          helperRow.style.display = "table-row";
-          helperCell.textContent =
-            "Start typing in the search box to find inventory items.";
-        } else if (visibleCount === 0) {
-          helperRow.style.display = "table-row";
-          helperCell.textContent = "No matching items found.";
-        } else {
-          helperRow.style.display = "none";
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const inputEl = document.getElementById("inventorySearch");
-        const rows = document.querySelectorAll(".inventory-row");
-
-        rows.forEach((row) => {
-          row.style.display = "none";
-        });
-
-        inputEl.addEventListener("input", searchInventory);
-        searchInventory();
-      });
-    </script>
   </body>
 </html>

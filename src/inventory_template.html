@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chiraath Inventory Browser</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+        --radius: 16px;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 24px auto;
+        padding: 0 16px 48px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin: 0;
+        letter-spacing: 0.2px;
+      }
+
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .actions a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        color: var(--text);
+        margin-left: 8px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        background: #fff;
+      }
+
+      .note {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 15px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+      }
+
+      th {
+        background: #fafafa;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .scroll {
+        max-height: 70vh;
+        overflow: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        background: #fff;
+      }
+
+      .inventory-search-wrap {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 5;
+        padding-bottom: 8px;
+      }
+
+      .low-stock {
+        background: #fff7ed;
+      }
+
+      .out-of-stock {
+        background: #fee2e2;
+      }
+
+      .helper-cell {
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .actions a {
+          margin-left: 0;
+          margin-right: 8px;
+        }
+
+        .hero {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .wrap {
+          padding: 0 10px 36px;
+        }
+
+        .card {
+          padding: 18px 12px;
+        }
+
+        h2 {
+          font-size: 14px;
+          margin-bottom: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <h1>Chiraath Inventory Browser</h1>
+          <div class="sub">
+            <span class="pill">Last updated: {{ last_updated }}</span>
+            <span class="pill">Qty sold: {{ qty_sold }}</span>
+            <span class="pill">Qty pending: {{ qty_pending }}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="./index.html">Back to Dashboard</a>
+          <a href="./{{ excel_filename }}" download>Download full Excel</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Inventory Browser</h2>
+
+        <div class="inventory-search-wrap">
+          <input
+            type="text"
+            id="inventorySearch"
+            class="search-input"
+            placeholder="Search by SKU, item, category, color, or size..."
+          />
+        </div>
+
+        <div class="scroll">
+          <table id="inventoryTable">
+            <thead>
+              <tr>
+                {% for c in inventory_cols %}
+                <th>{{ c }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody id="inventoryBody">
+              <tr id="inventoryHelperRow">
+                <td
+                  id="inventoryHelperCell"
+                  class="helper-cell"
+                  colspan="{{ inventory_cols|length }}"
+                >
+                  Start typing in the search box to find inventory items.
+                </td>
+              </tr>
+
+              {% for r in inventory_records %}
+              <tr class="inventory-row">
+                {% for c in inventory_cols %}
+                <td>{{ r[c] }}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          Search across SKU, item name, category, color, and size. Rows show
+          only after search.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function searchInventory() {
+        const inputEl = document.getElementById("inventorySearch");
+        const helperRow = document.getElementById("inventoryHelperRow");
+        const helperCell = document.getElementById("inventoryHelperCell");
+        const rows = document.querySelectorAll(".inventory-row");
+        const input = (inputEl.value || "").toLowerCase().trim();
+
+        let visibleCount = 0;
+
+        rows.forEach((row) => {
+          const text = (row.textContent || "").toLowerCase();
+
+          row.classList.remove("low-stock", "out-of-stock");
+
+          if (!input) {
+            row.style.display = "none";
+            return;
+          }
+
+          if (text.includes(input)) {
+            row.style.display = "table-row";
+
+            const qtyCell = row.querySelector("td:nth-child(6)");
+            const qty = parseInt((qtyCell?.textContent || "0").trim(), 10) || 0;
+
+            if (qty === 0) {
+              row.classList.add("out-of-stock");
+            } else if (qty === 1) {
+              row.classList.add("low-stock");
+            }
+
+            visibleCount += 1;
+          } else {
+            row.style.display = "none";
+          }
+        });
+
+        if (!input) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent =
+            "Start typing in the search box to find inventory items.";
+        } else if (visibleCount === 0) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent = "No matching items found.";
+        } else {
+          helperRow.style.display = "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputEl = document.getElementById("inventorySearch");
+        const rows = document.querySelectorAll(".inventory-row");
+
+        rows.forEach((row) => {
+          row.style.display = "none";
+        });
+
+        inputEl.addEventListener("input", searchInventory);
+        searchInventory();
+      });
+    </script>
+  </body>
+</html>

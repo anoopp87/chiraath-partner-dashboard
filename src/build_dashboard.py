@@ -100,7 +100,9 @@ def read_range(ws, min_row, max_row, min_col, max_col):
     ]
 
 
-def df_from_range(ws, header_row: int, data_rows: tuple[int, int], cols: tuple[int, int]) -> pd.DataFrame:
+def df_from_range(
+    ws, header_row: int, data_rows: tuple[int, int], cols: tuple[int, int]
+) -> pd.DataFrame:
     headers = read_range(ws, header_row, header_row, cols[0], cols[1])[0]
     data = read_range(ws, data_rows[0], data_rows[1], cols[0], cols[1])
     return pd.DataFrame(data, columns=headers)
@@ -134,6 +136,9 @@ def format_df_currency(df: pd.DataFrame) -> tuple[list[dict], list[str]]:
 def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     dist_dir.mkdir(parents=True, exist_ok=True)
 
+    root = template_path.parent.parent
+    inventory_template_path = root / "src" / "inventory_template.html"
+
     wb = openpyxl.load_workbook(input_xlsx, data_only=True)
     ws_sum = wb[SHEET_SUMMARY]
     ws_dash = wb[SHEET_DASHBOARD]
@@ -152,18 +157,12 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     # Tables
     contrib_df = df_from_range(ws_sum, CONTRIB_HEADER_ROW, CONTRIB_DATA_ROWS, CONTRIB_COLS)
-
-    # Keep only Partner + last two columns
     contrib_df = contrib_df.iloc[:, [0, -2, -1]]
 
     cash_df = df_from_range(ws_sum, CASH_HEADER_ROW, CASH_DATA_ROWS, CASH_COLS)
-
-    # Keep only Partner + last two columns
     cash_df = cash_df.iloc[:, [0, -2, -1]]
 
     month_df = df_from_range(ws_dash, MONTH_HEADER_ROW, MONTH_DATA_ROWS, MONTH_COLS)
-
-    # Coerce numeric columns if present
     for c in ["Purchases (₹)", "Sales (₹)", "Profit (₹)"]:
         if c in month_df.columns:
             month_df[c] = pd.to_numeric(month_df[c], errors="coerce").fillna(0)
@@ -201,13 +200,15 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     if available_inventory_cols:
         inventory_df = inventory_df[available_inventory_cols].copy()
+
         if "Qty Pending" in inventory_df.columns:
             inventory_df["Qty Pending"] = pd.to_numeric(
                 inventory_df["Qty Pending"], errors="coerce"
             ).fillna(0).astype(int)
 
-        if "Sale Amount (₹)" in inventory_df.columns:
-            inventory_df["Sale Amount (₹)"] = inventory_df["Sale Amount (₹)"].apply(money2)
+        for money_col in ["Sale Amount (₹)", "Purchase Price (₹)"]:
+            if money_col in inventory_df.columns:
+                inventory_df[money_col] = inventory_df[money_col].apply(money2)
 
         inventory_df = inventory_df.fillna("")
         inventory_records = inventory_df.to_dict(orient="records")
@@ -269,11 +270,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold")
         )
         fig_cat_qty.add_trace(
-            go.Bar(
-                x=cat_qty_df["Category"],
-                y=cat_qty_df["Qty Pending"],
-                name="Qty Pending",
-            )
+            go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Pending"], name="Qty Pending")
         )
         fig_cat_qty.update_layout(barmode="stack", title="Quantity by Category")
         charts["cat_qty"] = pio.to_html(
@@ -313,13 +310,21 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     cash_records, cash_cols = format_df_currency(cash_df)
 
     # Render HTML
-    tpl = Template(template_path.read_text(encoding="utf-8"))
+    tpl_dashboard = Template(template_path.read_text(encoding="utf-8"))
+    tpl_inventory = Template(inventory_template_path.read_text(encoding="utf-8"))
     excel_filename = "Chiraath-Business-Summary-Latest.xlsx"
 
-    html = tpl.render(
+    common_context = dict(
         last_updated=last_updated,
         qty_sold=int(qty_sold) if qty_sold is not None else "—",
         qty_pending=int(qty_pending) if qty_pending is not None else "—",
+        excel_filename=excel_filename,
+        inventory_cols=inventory_cols,
+        inventory_records=inventory_records,
+    )
+
+    dashboard_html = tpl_dashboard.render(
+        **common_context,
         total_purchases=money0(total_purchases),
         total_sales_completed=money0(total_sales_completed),
         profit_loss=money0(profit_loss),
@@ -333,17 +338,17 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         contrib_records=contrib_records,
         cash_cols=cash_cols,
         cash_records=cash_records,
-        inventory_cols=inventory_cols,
-        inventory_records=inventory_records,
-        excel_filename=excel_filename,
     )
 
-    (dist_dir / "index.html").write_text(html, encoding="utf-8")
+    inventory_html = tpl_inventory.render(**common_context)
 
-    # Copy excel for download button
+    (dist_dir / "index.html").write_text(dashboard_html, encoding="utf-8")
+    (dist_dir / "inventory.html").write_text(inventory_html, encoding="utf-8")
+
     shutil.copyfile(input_xlsx, dist_dir / excel_filename)
 
     print(f"✅ Built dashboard: {dist_dir / 'index.html'}")
+    print(f"✅ Built inventory page: {dist_dir / 'inventory.html'}")
     print(f"⬇️  Excel download file: {dist_dir / excel_filename}")
 
 

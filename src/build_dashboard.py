@@ -407,7 +407,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
 if __name__ == "__main__":
     root = Path(__file__).resolve().parents[1]
-    input_xlsx = root / "input" / "Chiraath - Business Summary - Latest.xlsx"
+    input_xlsx = root / "input" / "Chiraath - Business Summary.xlsx"
     template_path = root / "src" / "template.html"
     dist_dir = root / "docs"
 

@@ -37,6 +37,7 @@ CELL_QTY_PENDING = "G11"
 MONTH_HEADER_ROW = 9
 MONTH_DATA_ROWS = (10, 21)
 MONTH_COLS = (1, 4)  # A-D
+MONTH_PROFIT_COL = "Net Cash Flow (₹)"  # rename here if the column heading changes
 
 # Category qty: header row 46, data 47-49, cols F-H
 CATQTY_HEADER_ROW = 46
@@ -165,7 +166,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     cash_df = cash_df.iloc[:, [0, -2, -1]]
 
     month_df = df_from_range(ws_dash, MONTH_HEADER_ROW, MONTH_DATA_ROWS, MONTH_COLS)
-    for c in ["Purchases (₹)", "Sales (₹)", "Profit (₹)"]:
+    for c in ["Purchases (₹)", "Sales (₹)", MONTH_PROFIT_COL]:
         if c in month_df.columns:
             month_df[c] = pd.to_numeric(month_df[c], errors="coerce").fillna(0)
 
@@ -287,13 +288,13 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             "</div>"
         )
 
-    if {"Month", "Profit (₹)"}.issubset(set(month_df.columns)):
+    if {"Month", MONTH_PROFIT_COL}.issubset(set(month_df.columns)):
         fig_profit = px.line(
             month_df,
             x="Month",
-            y="Profit (₹)",
+            y=MONTH_PROFIT_COL,
             markers=True,
-            title="Monthly Profit (₹)",
+            title=f"Monthly {MONTH_PROFIT_COL}",
         )
         charts["profit"] = pio.to_html(
             fig_profit,

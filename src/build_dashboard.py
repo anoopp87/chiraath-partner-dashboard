@@ -274,7 +274,12 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         fig_month.add_trace(
             go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales")
         )
-        fig_month.update_layout(barmode="group", title="Monthly Purchases vs Sales")
+        fig_month.update_layout(
+            barmode="group",
+            title="Monthly Purchases vs Sales",
+            margin=dict(l=40, r=20, t=50, b=80),
+            legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="center", x=0.5),
+        )
         charts["month"] = pio.to_html(
             fig_month,
             include_plotlyjs="cdn",
@@ -296,6 +301,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             markers=True,
             title=f"Monthly {MONTH_PROFIT_COL}",
         )
+        fig_profit.update_layout(margin=dict(l=40, r=20, t=50, b=40))
         charts["profit"] = pio.to_html(
             fig_profit,
             include_plotlyjs=False,
@@ -321,7 +327,12 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
                 name="Qty Pending",
             )
         )
-        fig_cat_qty.update_layout(barmode="stack", title="Quantity by Category")
+        fig_cat_qty.update_layout(
+            barmode="stack",
+            title="Quantity by Category",
+            margin=dict(l=40, r=20, t=50, b=80),
+            legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="center", x=0.5),
+        )
         charts["cat_qty"] = pio.to_html(
             fig_cat_qty,
             include_plotlyjs=False,
@@ -342,6 +353,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             y="Pending Value (₹)",
             title="Pending Stock Value by Category (₹)",
         )
+        fig_pending_val.update_layout(margin=dict(l=40, r=20, t=50, b=40))
         charts["pending_val"] = pio.to_html(
             fig_pending_val,
             include_plotlyjs=False,

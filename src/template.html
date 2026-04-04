@@ -437,33 +437,29 @@
     </div>
 
     <script>
-      // Classify partner rows as pay/receive based on Pending Balance value.
-      // Negative value ("₹-") means the amount shown is negative.
-      function classifyRows(tableId, positiveClass, negativeClass) {
+      // Classify rows by reading the Action column text directly.
+      // The Excel formula already encodes the correct action ("Receive ₹xxx" or "Pay ₹xxx"),
+      // so we just map those words to colours — no sign-detection needed.
+      // "Receive" → green for both tables.
+      // "Pay" (or "Pay to pool") → red for both tables.
+      function classifyRows(tableId) {
         var table = document.getElementById(tableId);
         if (!table) return;
         var rows = table.querySelectorAll("tbody tr");
         rows.forEach(function (row) {
           var cells = row.querySelectorAll("td");
           if (!cells.length) return;
-          var lastCell = cells[cells.length - 1];
-          var text = lastCell.textContent.trim();
-          // Skip blanks and zero
-          if (!text || text === "—" || text === "₹0.00" || text === "₹0") return;
-          // Negative: Plotly formats as "₹-1,234.56"
-          if (text.indexOf("₹-") !== -1 || (text.charAt(0) === "-" && text !== "—")) {
-            row.classList.add(negativeClass);
-          } else {
-            row.classList.add(positiveClass);
+          var actionText = cells[cells.length - 1].textContent.trim().toLowerCase();
+          if (actionText.indexOf("receive") !== -1) {
+            row.classList.add("receive");
+          } else if (actionText.indexOf("pay") !== -1) {
+            row.classList.add("pay");
           }
         });
       }
 
-      // Contribution: + means receive (green), − means pay (red)
-      classifyRows("contrib-table", "receive", "pay");
-
-      // Cash Pool: + means pay to pool (red), − means receive (green)
-      classifyRows("cash-table", "pay", "receive");
+      classifyRows("contrib-table");
+      classifyRows("cash-table");
     </script>
   </body>
 </html>

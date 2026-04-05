@@ -25,12 +25,7 @@
         margin: 0;
         background: var(--bg);
         color: var(--text);
-        font-family:
-          system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          Arial;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
       }
 
       .wrap {
@@ -48,11 +43,7 @@
         margin-bottom: 14px;
       }
 
-      h1 {
-        font-size: 22px;
-        margin: 0;
-        letter-spacing: 0.2px;
-      }
+      h1 { font-size: 22px; margin: 0; letter-spacing: 0.2px; }
 
       .sub {
         color: var(--muted);
@@ -64,20 +55,37 @@
         align-items: center;
       }
 
-      .actions a {
+      /* ── Action buttons (links + print button) ── */
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .actions a,
+      .actions button {
         display: inline-block;
         text-decoration: none;
         background: var(--card);
         border: 1px solid var(--border);
-        padding: 10px 12px;
+        padding: 10px 14px;
         border-radius: 12px;
         box-shadow: var(--shadow);
         font-size: 13px;
         color: var(--text);
-        margin-left: 8px;
+        cursor: pointer;
+        font-family: inherit;
+        line-height: 1;
       }
 
-      /* ── Last Updated badge ── */
+      .actions button.print-btn {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #15803d;
+      }
+
+      /* ── Pills ── */
       .pill {
         display: inline-block;
         padding: 3px 10px;
@@ -101,10 +109,7 @@
         background: #eef2ff;
       }
 
-      .pill-updated::before {
-        content: "🕐";
-        font-size: 12px;
-      }
+      .pill-updated::before { content: "🕐"; font-size: 12px; }
 
       /* ── Grid ── */
       .grid {
@@ -129,22 +134,9 @@
         background: linear-gradient(180deg, #fff, #fbfbfd);
       }
 
-      .kpi .label {
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .kpi .value {
-        font-size: 24px;
-        font-weight: 750;
-        margin-top: 6px;
-      }
-
-      .kpi .hint {
-        color: var(--muted);
-        font-size: 12px;
-        margin-top: 4px;
-      }
+      .kpi .label { color: var(--muted); font-size: 12px; }
+      .kpi .value { font-size: 24px; font-weight: 750; margin-top: 6px; }
+      .kpi .hint  { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
       .kpis {
         grid-column: 1 / -1;
@@ -156,34 +148,23 @@
       .span-6 { grid-column: span 6; }
       .span-7 { grid-column: span 7; }
       .span-5 { grid-column: span 5; }
+      .span-12 { grid-column: 1 / -1; }
 
-      h2 {
-        margin: 0 0 10px;
-        font-size: 15px;
-      }
+      h2 { margin: 0 0 10px; font-size: 15px; }
 
       /* ── Tables ── */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-      }
+      table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
-      th,
-      td {
+      th, td {
         padding: 10px 10px;
         border-bottom: 1px solid var(--border);
         text-align: left;
         white-space: nowrap;
       }
 
-      /* Right-align every column except the first (partner name) */
       th:not(:first-child),
-      td:not(:first-child) {
-        text-align: right;
-      }
+      td:not(:first-child) { text-align: right; }
 
-      /* Sticky header row */
       thead th {
         background: #fafafa;
         position: sticky;
@@ -194,7 +175,6 @@
         border-bottom: 2px solid var(--border);
       }
 
-      /* Sticky first column (partner name) */
       th:first-child,
       td:first-child {
         position: sticky;
@@ -203,42 +183,22 @@
         background: var(--card);
       }
 
-      /* Keep header corner on top of both sticky axes */
-      thead th:first-child {
-        z-index: 3;
-        background: #fafafa;
-      }
+      thead th:first-child { z-index: 3; background: #fafafa; }
 
-      /* ── Settlement column (last col in partner tables) ── */
+      /* ── Settlement column ── */
       .settle-col {
         font-size: 16px !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px;
       }
 
-      /* ── Pay / Receive row highlights ── */
-      tr.pay td {
-        background: var(--red-bg);
-      }
-      tr.pay td.settle-col {
-        color: var(--red);
-        background: var(--red-bg);
-      }
-      tr.receive td {
-        background: var(--green-bg);
-      }
-      tr.receive td.settle-col {
-        color: var(--green);
-        background: var(--green-bg);
-      }
-
-      /* Keep sticky first-col consistent with row color */
-      tr.pay td:first-child {
-        background: var(--red-bg);
-      }
-      tr.receive td:first-child {
-        background: var(--green-bg);
-      }
+      /* ── Pay / Receive highlights ── */
+      tr.pay     td              { background: var(--red-bg); }
+      tr.pay     td.settle-col   { color: var(--red);   background: var(--red-bg); }
+      tr.pay     td:first-child  { background: var(--red-bg); }
+      tr.receive td              { background: var(--green-bg); }
+      tr.receive td.settle-col   { color: var(--green); background: var(--green-bg); }
+      tr.receive td:first-child  { background: var(--green-bg); }
 
       /* ── Scroll wrapper ── */
       .scroll {
@@ -248,77 +208,95 @@
         border: 1px solid var(--border);
       }
 
-      .note {
-        color: var(--muted);
-        font-size: 12px;
-        margin-top: 10px;
+      .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+      /* ── Month filter bar ── */
+      .filter-bar {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 2px 0 4px;
+      }
+
+      .filter-label { font-size: 13px; color: var(--muted); margin-right: 4px; }
+
+      .filter-btn {
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--text);
+        font-family: inherit;
+        transition: background 0.15s, color 0.15s;
+      }
+
+      .filter-btn.active {
+        background: #4f46e5;
+        border-color: #4f46e5;
+        color: #fff;
       }
 
       /* ── Charts ── */
-      .plotly-graph-div {
-        width: 100% !important;
-        min-height: 340px !important;
-      }
-
+      .plotly-graph-div          { width: 100% !important; min-height: 340px !important; }
       .card .plotly-graph-div,
-      .card .js-plotly-plot {
-        width: 100% !important;
-      }
+      .card .js-plotly-plot      { width: 100% !important; }
 
       /* ── Responsive ── */
       @media (max-width: 980px) {
-        .plotly-graph-div {
-          min-height: 380px !important;
-        }
-
-        .kpis {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .span-6,
-        .span-7,
-        .span-5 {
-          grid-column: 1 / -1;
-        }
-
-        .actions a {
-          margin-left: 0;
-          margin-right: 8px;
-        }
-
-        .hero {
-          align-items: flex-start;
-          flex-direction: column;
-        }
+        .plotly-graph-div { min-height: 380px !important; }
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .span-6, .span-7, .span-5 { grid-column: 1 / -1; }
+        .hero { align-items: flex-start; flex-direction: column; }
       }
 
       @media (max-width: 600px) {
-        .wrap {
-          padding: 0 10px 36px;
-        }
+        .wrap { padding: 0 10px 36px; }
+        .plotly-graph-div { min-height: 360px !important; }
+        .card { padding: 18px 12px; }
+        h2 { font-size: 14px; margin-bottom: 12px; }
+        .settle-col { font-size: 15px !important; }
+      }
 
-        /* Legends are now horizontal (below chart) so height can stay compact */
-        .plotly-graph-div {
-          min-height: 360px !important;
-        }
+      /* ── Print / PDF ── */
+      @media print {
+        body { background: #fff; }
+
+        .actions,
+        .filter-bar,
+        .note,
+        .sub .pill { display: none !important; }
+
+        .wrap { margin: 0; padding: 8px; max-width: 100%; }
 
         .card {
-          padding: 18px 12px;
+          box-shadow: none;
+          border: 1px solid #ddd;
+          break-inside: avoid;
         }
 
-        h2 {
-          font-size: 14px;
-          margin-bottom: 12px;
+        .kpis { break-inside: avoid; }
+
+        /* Force background colours to print */
+        * {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
         }
 
-        .settle-col {
-          font-size: 15px !important;
-        }
+        /* Charts are large — allow them to scale down */
+        .plotly-graph-div { min-height: 260px !important; }
+
+        /* One chart per row on print */
+        .span-7, .span-5, .span-6 { grid-column: 1 / -1; }
       }
     </style>
   </head>
   <body>
     <div class="wrap">
+
+      <!-- Header -->
       <div class="hero">
         <div>
           <h1>Chiraath Partner Dashboard</h1>
@@ -330,11 +308,14 @@
         </div>
         <div class="actions">
           <a href="./inventory.html">Inventory Browser</a>
-          <a href="./{{ excel_filename }}" download>Download full Excel</a>
+          <a href="./{{ excel_filename }}" download>⬇ Download Excel</a>
+          <button class="print-btn" onclick="window.print()">🖨 Save as PDF</button>
         </div>
       </div>
 
       <div class="grid">
+
+        <!-- KPI cards -->
         <div class="kpis">
           <div class="kpi">
             <div class="label">Total Purchases</div>
@@ -414,6 +395,15 @@
           </div>
         </div>
 
+        <!-- Month filter bar (applies to the two monthly charts below) -->
+        <div class="filter-bar">
+          <span class="filter-label">Show:</span>
+          <button class="filter-btn" data-n="3" onclick="applyMonthFilter(3)">Last 3M</button>
+          <button class="filter-btn" data-n="6" onclick="applyMonthFilter(6)">Last 6M</button>
+          <button class="filter-btn active" data-n="0" onclick="applyMonthFilter(0)">All</button>
+        </div>
+
+        <!-- Monthly charts -->
         <div class="card span-7">
           <h2>Monthly Purchases vs Sales</h2>
           {{ chart_month | safe }}
@@ -424,6 +414,7 @@
           {{ chart_profit | safe }}
         </div>
 
+        <!-- Category charts -->
         <div class="card span-6">
           <h2>Quantity by Category</h2>
           {{ chart_cat_qty | safe }}
@@ -433,33 +424,60 @@
           <h2>Pending Stock Value by Category</h2>
           {{ chart_pending_val | safe }}
         </div>
-      </div>
-    </div>
+
+      </div><!-- /grid -->
+    </div><!-- /wrap -->
 
     <script>
-      // Classify rows by reading the Action column text directly.
-      // The Excel formula already encodes the correct action ("Receive ₹xxx" or "Pay ₹xxx"),
-      // so we just map those words to colours — no sign-detection needed.
-      // "Receive" → green for both tables.
-      // "Pay" (or "Pay to pool") → red for both tables.
+      // ─────────────────────────────────────────
+      // Pay / Receive row colouring
+      // ─────────────────────────────────────────
       function classifyRows(tableId) {
         var table = document.getElementById(tableId);
         if (!table) return;
-        var rows = table.querySelectorAll("tbody tr");
-        rows.forEach(function (row) {
+        table.querySelectorAll("tbody tr").forEach(function (row) {
           var cells = row.querySelectorAll("td");
           if (!cells.length) return;
-          var actionText = cells[cells.length - 1].textContent.trim().toLowerCase();
-          if (actionText.indexOf("receive") !== -1) {
-            row.classList.add("receive");
-          } else if (actionText.indexOf("pay") !== -1) {
-            row.classList.add("pay");
-          }
+          var text = cells[cells.length - 1].textContent.trim().toLowerCase();
+          if (text.indexOf("receive") !== -1)      row.classList.add("receive");
+          else if (text.indexOf("pay") !== -1)     row.classList.add("pay");
         });
       }
 
       classifyRows("contrib-table");
       classifyRows("cash-table");
+
+      // ─────────────────────────────────────────
+      // Month filter (Last 3M / 6M / All)
+      // Acts on: chart-month (2 bar traces) and chart-profit (1 line trace)
+      // ─────────────────────────────────────────
+      var MONTH_DATA      = {{ month_data_json | safe }};
+      var COL_PROFIT      = "{{ month_col_profit }}";
+      var COL_PURCHASES   = "Purchases (\u20b9)";
+      var COL_SALES       = "Sales (\u20b9)";
+
+      function applyMonthFilter(n) {
+        var data = (n > 0 && n < MONTH_DATA.length) ? MONTH_DATA.slice(-n) : MONTH_DATA;
+        var months    = data.map(function (d) { return d["Month"]; });
+        var purchases = data.map(function (d) { return d[COL_PURCHASES]; });
+        var sales     = data.map(function (d) { return d[COL_SALES]; });
+        var profit    = data.map(function (d) { return d[COL_PROFIT]; });
+
+        try {
+          Plotly.restyle("chart-month",  { x: [months, months], y: [purchases, sales] });
+          Plotly.restyle("chart-profit", { x: [months],         y: [profit] });
+        } catch (e) { /* charts may be unavailable (fallback text shown) */ }
+
+        // Update active button
+        document.querySelectorAll(".filter-btn").forEach(function (btn) {
+          btn.classList.toggle("active", parseInt(btn.dataset.n, 10) === n);
+        });
+      }
+
+      // Initialise filter after Plotly finishes rendering
+      window.addEventListener("load", function () {
+        if (typeof Plotly !== "undefined") applyMonthFilter(0);
+      });
     </script>
   </body>
 </html>

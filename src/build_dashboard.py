@@ -151,7 +151,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     profit_loss = ws_sum[CELL_PROFIT_LOSS_COMPLETED].value
     profit_status = ws_sum[CELL_PROFIT_STATUS].value
 
-    last_updated = excel_serial_to_datetime(ws_dash[CELL_LAST_UPDATED].value)
+    last_updated = datetime.now().strftime("%b %d, %Y %I:%M %p")
     pending_stock_value = ws_dash[CELL_PENDING_STOCK_VALUE].value
     qty_sold = ws_dash[CELL_QTY_SOLD].value
     qty_pending = ws_dash[CELL_QTY_PENDING].value
@@ -285,6 +285,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             include_plotlyjs="cdn",
             full_html=False,
             config=PLOTLY_CONFIG,
+            div_id="chart-month",
         )
     else:
         charts["month"] = (
@@ -307,6 +308,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             include_plotlyjs=False,
             full_html=False,
             config=PLOTLY_CONFIG,
+            div_id="chart-profit",
         )
     else:
         charts["profit"] = (
@@ -338,6 +340,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             include_plotlyjs=False,
             full_html=False,
             config=PLOTLY_CONFIG,
+            div_id="chart-cat-qty",
         )
     else:
         charts["cat_qty"] = (
@@ -359,6 +362,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             include_plotlyjs=False,
             full_html=False,
             config=PLOTLY_CONFIG,
+            div_id="chart-pending-val",
         )
     else:
         charts["pending_val"] = (
@@ -370,10 +374,14 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     contrib_records, contrib_cols = format_df_currency(contrib_df)
     cash_records, cash_cols = format_df_currency(cash_df)
 
+    # Serialize monthly data for the JS month-filter feature
+    month_df_clean = month_df[month_df.iloc[:, 0].notna()].copy()
+    month_data_json = month_df_clean.to_json(orient="records")
+
     # Render HTML
     tpl_dashboard = Template(template_path.read_text(encoding="utf-8"))
     tpl_inventory = Template(inventory_template_path.read_text(encoding="utf-8"))
-    excel_filename = "Chiraath-Business-Summary-Latest.xlsx"
+    excel_filename = f"Chiraath-Summary-{datetime.now().strftime('%b%y')}.xlsx"
 
     common_context = dict(
         last_updated=last_updated,
@@ -403,6 +411,8 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         contrib_records=contrib_records,
         cash_cols=cash_cols,
         cash_records=cash_records,
+        month_data_json=month_data_json,
+        month_col_profit=MONTH_PROFIT_COL,
     )
 
     inventory_html = tpl_inventory.render(**common_context)

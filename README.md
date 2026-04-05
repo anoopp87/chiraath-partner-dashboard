@@ -66,6 +66,19 @@ docs/       ← generated output (committed and served by GitHub Pages)
 
 ---
 
+## Troubleshooting
+
+**Git lock file errors** — if you see `Unable to create '...index.lock'` or `Unable to create '...HEAD.lock'`, a previous git process crashed and left stale lock files. Remove them and retry:
+
+```bash
+rm /Users/anooppremachandran/chiraath-dashboard-project/.git/index.lock
+rm /Users/anooppremachandran/chiraath-dashboard-project/.git/HEAD.lock
+```
+
+It's safe to delete these — they are just leftover flags, not real data.
+
+---
+
 ## For developers
 
 ### Source files (`src/`)

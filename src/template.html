@@ -457,7 +457,11 @@
       var COL_SALES       = "Sales (\u20b9)";
 
       function applyMonthFilter(n) {
-        var data = (n > 0 && n < MONTH_DATA.length) ? MONTH_DATA.slice(-n) : MONTH_DATA;
+        // Strip out months with no real data (both purchases and sales are 0 or null)
+        var withData = MONTH_DATA.filter(function (d) {
+          return (d[COL_PURCHASES] || 0) !== 0 || (d[COL_SALES] || 0) !== 0;
+        });
+        var data = (n > 0 && n < withData.length) ? withData.slice(-n) : withData;
         var months    = data.map(function (d) { return d["Month"]; });
         var purchases = data.map(function (d) { return d[COL_PURCHASES]; });
         var sales     = data.map(function (d) { return d[COL_SALES]; });

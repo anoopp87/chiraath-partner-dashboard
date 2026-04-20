@@ -153,17 +153,34 @@
       h2 { margin: 0 0 10px; font-size: 15px; }
 
       /* ── Tables ── */
-      table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        table-layout: fixed;
+      }
 
       th, td {
-        padding: 10px 10px;
+        padding: 12px 10px;
         border-bottom: 1px solid var(--border);
         text-align: left;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      th:not(:first-child),
-      td:not(:first-child) { text-align: right; }
+      /* First column = label (partner/pool name) — auto width, left-aligned */
+      th:first-child, td:first-child { width: 34%; }
+
+      /* Middle columns — numeric, right-aligned, equal widths */
+      th:not(:first-child):not(:last-child),
+      td:not(:first-child):not(:last-child) {
+        text-align: right;
+        width: 33%;
+      }
+
+      /* Last column = settlement — right-aligned, larger */
+      th:last-child, td:last-child { text-align: right; width: 33%; }
 
       thead th {
         background: #fafafa;
@@ -187,7 +204,7 @@
 
       /* ── Settlement column ── */
       .settle-col {
-        font-size: 16px !important;
+        font-size: 19px !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px;
       }
@@ -246,7 +263,7 @@
 
       /* ── Responsive ── */
       @media (max-width: 980px) {
-        .plotly-graph-div { min-height: 380px !important; }
+        .plotly-graph-div { min-height: 340px !important; }
         .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .span-6, .span-7, .span-5 { grid-column: 1 / -1; }
         .hero { align-items: flex-start; flex-direction: column; }
@@ -254,10 +271,23 @@
 
       @media (max-width: 600px) {
         .wrap { padding: 0 10px 36px; }
-        .plotly-graph-div { min-height: 360px !important; }
-        .card { padding: 18px 12px; }
-        h2 { font-size: 14px; margin-bottom: 12px; }
-        .settle-col { font-size: 15px !important; }
+        .plotly-graph-div { min-height: 300px !important; }
+        .card { padding: 14px 10px; }
+        h2 { font-size: 14px; margin-bottom: 10px; }
+
+        /* Tighter tables on mobile */
+        table { font-size: 12px; }
+        th, td { padding: 10px 6px; }
+        th:first-child, td:first-child { width: 38%; }
+        .settle-col { font-size: 17px !important; }
+
+        /* Tidier KPI cards */
+        .kpi { padding: 12px; }
+        .kpi .value { font-size: 20px; }
+
+        /* Filter bar wrap nicely */
+        .filter-bar { flex-wrap: wrap; }
+        .filter-btn { padding: 6px 12px; font-size: 12px; }
       }
 
       /* ── Print / PDF ── */
@@ -289,7 +319,7 @@
         .plotly-graph-div { min-height: 260px !important; }
 
         /* One chart per row on print */
-        .span-7, .span-5, .span-6 { grid-column: 1 / -1; }
+        .span-7, .span-5, .span-6, .span-12 { grid-column: 1 / -1; }
       }
     </style>
   </head>
@@ -423,6 +453,15 @@
         <div class="card span-6">
           <h2>Pending Stock Value by Category</h2>
           {{ chart_pending_val | safe }}
+        </div>
+
+        <!-- Historical trend (built from data/history.json) -->
+        <div class="card span-12">
+          <h2>KPI Trend Over Time</h2>
+          {{ chart_trend | safe }}
+          <div class="note">
+            Snapshots of the 4 top KPIs, captured on each build. More data points appear as you rebuild over time.
+          </div>
         </div>
 
       </div><!-- /grid -->

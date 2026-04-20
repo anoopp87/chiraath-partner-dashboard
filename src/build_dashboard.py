@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from datetime import datetime, date
+import json
 import math
 import shutil
 
@@ -109,6 +110,63 @@ def df_from_range(
     return pd.DataFrame(data, columns=headers)
 
 
+def _num(x) -> float:
+    """Coerce a cell value to float, returning 0.0 for None/NaN/non-numeric."""
+    try:
+        if x is None:
+            return 0.0
+        if isinstance(x, float) and math.isnan(x):
+            return 0.0
+        return float(x)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def update_history(
+    history_path: Path,
+    total_purchases,
+    total_sales,
+    profit_loss,
+    pending_stock_value,
+) -> list[dict]:
+    """Append today's core KPI snapshot to history.json.
+
+    Dedup rule: overwrite any entry with today's date, so rebuilds on the
+    same day replace rather than accumulate. Entries sorted by date ascending.
+    Returns the full history list (list of dicts).
+    """
+    today = datetime.now().strftime("%Y-%m-%d")
+    entry = {
+        "date": today,
+        "total_purchases": _num(total_purchases),
+        "total_sales": _num(total_sales),
+        "profit_loss": _num(profit_loss),
+        "pending_stock_value": _num(pending_stock_value),
+    }
+
+    history: list[dict] = []
+    if history_path.exists():
+        try:
+            raw = json.loads(history_path.read_text(encoding="utf-8"))
+            if isinstance(raw, dict) and "history" in raw:
+                history = raw.get("history") or []
+            elif isinstance(raw, list):
+                history = raw
+        except (json.JSONDecodeError, OSError):
+            history = []
+
+    # Remove any existing entry for today, then append
+    history = [h for h in history if h.get("date") != today]
+    history.append(entry)
+    history.sort(key=lambda h: h.get("date", ""))
+
+    history_path.parent.mkdir(parents=True, exist_ok=True)
+    history_path.write_text(
+        json.dumps({"history": history}, indent=2), encoding="utf-8"
+    )
+    return history
+
+
 def format_df_currency(df: pd.DataFrame) -> tuple[list[dict], list[str]]:
     df2 = df.copy()
     for col in df2.columns:
@@ -139,6 +197,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     root = template_path.parent.parent
     inventory_template_path = root / "src" / "inventory_template.html"
+    history_path = root / "data" / "history.json"
 
     wb = openpyxl.load_workbook(input_xlsx, data_only=True)
     ws_sum = wb[SHEET_SUMMARY]
@@ -371,6 +430,62 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             "</div>"
         )
 
+    # ── Historical trend (appends today's KPIs to data/history.json) ──
+    history = update_history(
+        history_path,
+        total_purchases,
+        total_sales_completed,
+        profit_loss,
+        pending_stock_value,
+    )
+
+    if len(history) >= 2:
+        hist_df = pd.DataFrame(history)
+        fig_trend = go.Figure()
+        fig_trend.add_trace(
+            go.Scatter(
+                x=hist_df["date"], y=hist_df["total_purchases"],
+                mode="lines+markers", name="Purchases",
+                line=dict(color="#4f46e5", width=2.5),
+            )
+        )
+        fig_trend.add_trace(
+            go.Scatter(
+                x=hist_df["date"], y=hist_df["total_sales"],
+                mode="lines+markers", name="Sales",
+                line=dict(color="#16a34a", width=2.5),
+            )
+        )
+        fig_trend.add_trace(
+            go.Scatter(
+                x=hist_df["date"], y=hist_df["profit_loss"],
+                mode="lines+markers", name="Profit / Loss",
+                line=dict(color="#dc2626", width=2.5),
+            )
+        )
+        fig_trend.update_layout(
+            title="KPI Trend Over Time",
+            margin=dict(l=40, r=20, t=50, b=80),
+            legend=dict(orientation="h", yanchor="top", y=-0.18,
+                        xanchor="center", x=0.5),
+            hovermode="x unified",
+            yaxis_title="₹",
+        )
+        charts["trend"] = pio.to_html(
+            fig_trend,
+            include_plotlyjs=False,
+            full_html=False,
+            config=PLOTLY_CONFIG,
+            div_id="chart-trend",
+        )
+    else:
+        charts["trend"] = (
+            "<div style='color:#6b7280;font-size:13px;padding:20px 0'>"
+            "Trend chart will appear after 2+ builds have been recorded. "
+            f"History currently has {len(history)} snapshot(s)."
+            "</div>"
+        )
+
     contrib_records, contrib_cols = format_df_currency(contrib_df)
     cash_records, cash_cols = format_df_currency(cash_df)
 
@@ -407,6 +522,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         chart_profit=charts["profit"],
         chart_cat_qty=charts["cat_qty"],
         chart_pending_val=charts["pending_val"],
+        chart_trend=charts["trend"],
         contrib_cols=contrib_cols,
         contrib_records=contrib_records,
         cash_cols=cash_cols,

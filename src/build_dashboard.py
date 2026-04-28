@@ -20,6 +20,19 @@ from jinja2 import Template
 SHEET_SUMMARY = "Summary"
 SHEET_DASHBOARD = "Dashboard"
 SHEET_INVENTORY = "INVENTORY"
+SHEET_SALES = "Sales"
+
+# Sales sheet — displayed columns (in order). Drop columns that are mostly empty.
+SALES_DISPLAY_COLS = [
+    "Date",
+    "Customer",
+    "Amount (₹)",
+    "Payment Method",
+    "Partner Received",
+    "Comments",
+]
+# Source column used for status partition
+SALES_STATUS_COL = "Status"
 
 # Summary KPIs (cell addresses)
 CELL_TOTAL_PURCHASES = "B3"
@@ -167,6 +180,83 @@ def update_history(
     return history
 
 
+def load_sales_df(ws_sales) -> pd.DataFrame:
+    """Read the Sales worksheet into a DataFrame, dropping fully-empty rows."""
+    rows = list(ws_sales.values)
+    if not rows:
+        return pd.DataFrame()
+    df = pd.DataFrame(rows[1:], columns=rows[0])
+    # drop rows where every cell is None/NaN
+    df = df.dropna(how="all").reset_index(drop=True)
+    return df
+
+
+def format_sales_for_display(df: pd.DataFrame) -> tuple[list[dict], list[str]]:
+    """Format a sales DataFrame for HTML display (formatted dates, currency)."""
+    if df.empty:
+        return [], list(SALES_DISPLAY_COLS)
+
+    available = [c for c in SALES_DISPLAY_COLS if c in df.columns]
+    out = df[available].copy()
+
+    if "Date" in out.columns:
+        out["Date"] = out["Date"].apply(excel_serial_to_datetime)
+    if "Amount (₹)" in out.columns:
+        out["Amount (₹)"] = out["Amount (₹)"].apply(money2)
+
+    out = out.fillna("")
+    return out.to_dict(orient="records"), list(out.columns)
+
+
+def compute_sales_kpis(df: pd.DataFrame, status_label: str) -> list[dict]:
+    """Build the 4 KPI cards for a sales page (Completed or Pending)."""
+    if df.empty:
+        return [
+            {"label": "Total Records", "value": "0", "hint": f"No {status_label.lower()} sales"},
+            {"label": "Total Amount", "value": money0(0), "hint": "Sum of Amount (₹)"},
+            {"label": "Average Sale", "value": money0(0), "hint": "Mean per record"},
+            {"label": "Largest Sale", "value": money0(0), "hint": "Max Amount (₹)"},
+        ]
+
+    amounts = pd.to_numeric(df.get("Amount (₹)", pd.Series(dtype=float)), errors="coerce").fillna(0)
+    total_amount = float(amounts.sum())
+    avg_amount = float(amounts.mean()) if len(amounts) else 0.0
+    max_amount = float(amounts.max()) if len(amounts) else 0.0
+
+    # date-based KPI: this-month total for Completed, oldest-pending for Pending
+    dates = pd.to_datetime(df.get("Date", pd.Series(dtype="datetime64[ns]")), errors="coerce")
+
+    if status_label.lower() == "pending":
+        oldest = dates.min()
+        if pd.notna(oldest):
+            days_old = (datetime.now() - oldest.to_pydatetime()).days
+            date_kpi = {
+                "label": "Oldest Pending",
+                "value": oldest.strftime("%b %d, %Y"),
+                "hint": f"{days_old} day{'s' if days_old != 1 else ''} ago",
+            }
+        else:
+            date_kpi = {"label": "Oldest Pending", "value": "—", "hint": "No dated entries"}
+        return [
+            {"label": "Pending Count", "value": str(len(df)), "hint": "Records in this view"},
+            {"label": "Pending Amount", "value": money0(total_amount), "hint": "Sum of Amount (₹)"},
+            date_kpi,
+            {"label": "Average Pending", "value": money0(avg_amount), "hint": "Mean per record"},
+        ]
+
+    # Completed page
+    now = datetime.now()
+    this_month_mask = (dates.dt.year == now.year) & (dates.dt.month == now.month)
+    this_month_total = float(amounts[this_month_mask].sum()) if this_month_mask.any() else 0.0
+
+    return [
+        {"label": "Total Records", "value": str(len(df)), "hint": "Completed sales"},
+        {"label": "Total Amount", "value": money0(total_amount), "hint": "Sum of Amount (₹)"},
+        {"label": "This Month", "value": money0(this_month_total), "hint": now.strftime("%b %Y")},
+        {"label": "Largest Sale", "value": money0(max_amount), "hint": "Max Amount (₹)"},
+    ]
+
+
 def format_df_currency(df: pd.DataFrame) -> tuple[list[dict], list[str]]:
     df2 = df.copy()
     for col in df2.columns:
@@ -197,12 +287,14 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
 
     root = template_path.parent.parent
     inventory_template_path = root / "src" / "inventory_template.html"
+    sales_template_path = root / "src" / "sales_template.html"
     history_path = root / "data" / "history.json"
 
     wb = openpyxl.load_workbook(input_xlsx, data_only=True)
     ws_sum = wb[SHEET_SUMMARY]
     ws_dash = wb[SHEET_DASHBOARD]
     ws_inventory = wb[SHEET_INVENTORY]
+    ws_sales = wb[SHEET_SALES] if SHEET_SALES in wb.sheetnames else None
 
     # KPIs
     total_purchases = ws_sum[CELL_TOTAL_PURCHASES].value
@@ -536,11 +628,66 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     (dist_dir / "index.html").write_text(dashboard_html, encoding="utf-8")
     (dist_dir / "inventory.html").write_text(inventory_html, encoding="utf-8")
 
+    # ----- Sales pages (Completed + Pending) -----
+    sales_df = load_sales_df(ws_sales) if ws_sales is not None else pd.DataFrame()
+    if not sales_df.empty and SALES_STATUS_COL in sales_df.columns:
+        status_series = sales_df[SALES_STATUS_COL].astype(str).str.strip().str.lower()
+        completed_df = sales_df[status_series == "completed"].copy()
+        pending_df = sales_df[status_series == "pending"].copy()
+    else:
+        completed_df = pd.DataFrame()
+        pending_df = pd.DataFrame()
+
+    # Sort: completed newest-first, pending oldest-first (so stale ones surface)
+    if not completed_df.empty and "Date" in completed_df.columns:
+        completed_df = completed_df.sort_values(
+            by="Date", ascending=False, na_position="last"
+        ).reset_index(drop=True)
+    if not pending_df.empty and "Date" in pending_df.columns:
+        pending_df = pending_df.sort_values(
+            by="Date", ascending=True, na_position="last"
+        ).reset_index(drop=True)
+
+    tpl_sales = Template(sales_template_path.read_text(encoding="utf-8"))
+
+    completed_records, sales_cols = format_sales_for_display(completed_df)
+    completed_html = tpl_sales.render(
+        page_title="Chiraath — Sales Completed",
+        page_status_label="Completed",
+        page_status_class="completed",
+        table_heading="Completed Sales",
+        last_updated=last_updated,
+        excel_filename=excel_filename,
+        cols=sales_cols,
+        records=completed_records,
+        kpis=compute_sales_kpis(completed_df, "Completed"),
+        note="Search across customer, amount, payment method, partner, and comments. Sorted newest first.",
+    )
+
+    pending_records, pending_cols = format_sales_for_display(pending_df)
+    pending_html = tpl_sales.render(
+        page_title="Chiraath — Sales Pending",
+        page_status_label="Pending",
+        page_status_class="pending",
+        table_heading="Pending Sales",
+        last_updated=last_updated,
+        excel_filename=excel_filename,
+        cols=pending_cols,
+        records=pending_records,
+        kpis=compute_sales_kpis(pending_df, "Pending"),
+        note="Pending sales (advance/promised, awaiting collection). Sorted oldest first.",
+    )
+
+    (dist_dir / "sales-completed.html").write_text(completed_html, encoding="utf-8")
+    (dist_dir / "sales-pending.html").write_text(pending_html, encoding="utf-8")
+
     # Copy excel for download button
     shutil.copyfile(input_xlsx, dist_dir / excel_filename)
 
     print(f"✅ Built dashboard: {dist_dir / 'index.html'}")
     print(f"✅ Built inventory page: {dist_dir / 'inventory.html'}")
+    print(f"✅ Built sales-completed page: {dist_dir / 'sales-completed.html'} ({len(completed_records)} rows)")
+    print(f"✅ Built sales-pending page: {dist_dir / 'sales-pending.html'} ({len(pending_records)} rows)")
     print(f"⬇️  Excel download file: {dist_dir / excel_filename}")
 
 

@@ -277,9 +277,24 @@
 
         /* Tighter tables on mobile */
         table { font-size: 12px; }
-        th, td { padding: 10px 6px; }
-        th:first-child, td:first-child { width: 38%; }
-        .settle-col { font-size: 17px !important; }
+        th, td { padding: 10px 4px; }
+        th:first-child, td:first-child { width: 36%; }
+        th:not(:first-child):not(:last-child),
+        td:not(:first-child):not(:last-child) { width: 28%; }
+        th:last-child, td:last-child { width: 36%; }
+
+        /* Action / settlement column — keep emphasis but no longer overpowering */
+        .settle-col {
+          font-size: 13px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          white-space: normal;       /* allow wrapping instead of forcing scroll */
+          word-break: break-word;
+        }
+
+        /* Tables should fit the viewport, never force horizontal scroll on mobile */
+        .scroll { overflow-x: hidden; overflow-y: auto; }
+        #contrib-table, #cash-table { width: 100%; }
 
         /* Tidier KPI cards */
         .kpi { padding: 12px; }
@@ -331,13 +346,15 @@
         <div>
           <h1>Chiraath Partner Dashboard</h1>
           <div class="sub">
-            <span class="pill-updated">Last updated: Apr 28, 2026 06:16 PM</span>
+            <span class="pill-updated">Last updated: Apr 28, 2026 06:26 PM</span>
             <span class="pill">Qty sold: 238</span>
             <span class="pill">Qty pending: 174</span>
           </div>
         </div>
         <div class="actions">
           <a href="./inventory.html">Inventory Browser</a>
+          <a href="./sales-completed.html">Sales Completed</a>
+          <a href="./sales-pending.html">Sales Pending</a>
           <a href="./Chiraath-Summary-Apr26.xlsx" download>⬇ Download Excel</a>
           <button class="print-btn" onclick="window.print()">🖨 Save as PDF</button>
         </div>

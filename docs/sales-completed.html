@@ -1,0 +1,3020 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chiraath — Sales Completed</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+        --radius: 16px;
+        --accent: #4f46e5;
+        --accent-soft: #eef2ff;
+        --green: #16a34a;
+        --green-bg: #dcfce7;
+        --amber: #d97706;
+        --amber-bg: #fef3c7;
+        --red: #dc2626;
+        --red-bg: #fee2e2;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 24px auto;
+        padding: 0 16px 48px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+
+      h1 { font-size: 22px; margin: 0; letter-spacing: 0.2px; }
+      .sub { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+      .pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        background: #fff;
+        margin-right: 4px;
+      }
+
+      .pill.status-completed { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+      .pill.status-pending { color: var(--amber); border-color: var(--amber); background: var(--amber-bg); }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+      .actions a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        color: var(--text);
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .actions a:hover { background: var(--accent-soft); border-color: var(--accent); }
+      .actions a.current {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        cursor: default;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin: 14px 0;
+      }
+
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+      }
+      .kpi .label { color: var(--muted); font-size: 12px; }
+      .kpi .value { font-size: 22px; font-weight: 750; margin-top: 6px; }
+      .kpi .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+
+      h2 { margin: 0 0 10px; font-size: 15px; }
+      .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: #fafafa;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        font-weight: 600;
+      }
+
+      td.amount, th.amount { text-align: right; white-space: nowrap; }
+      td.date, th.date { white-space: nowrap; }
+
+      .scroll {
+        max-height: 70vh;
+        overflow: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border: 2px solid #6366f1;
+        border-radius: 12px;
+        font-size: 14px;
+        background: #fff;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+      .search-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      }
+      .search-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .search-wrap {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 5;
+        padding-bottom: 8px;
+      }
+
+      .helper-cell { color: var(--muted); }
+
+      .row-pending { background: #fffbeb; }
+
+      @media (max-width: 980px) {
+        .hero { align-items: flex-start; flex-direction: column; }
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 600px) {
+        .wrap { padding: 0 10px 36px; }
+        .card { padding: 14px 10px; }
+        h2 { font-size: 14px; margin-bottom: 12px; }
+        table { font-size: 12px; }
+        th, td { padding: 8px 6px; }
+        .kpi .value { font-size: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <h1>Chiraath — Sales Completed</h1>
+          <div class="sub">
+            <span class="pill status-completed">Completed</span>
+            <span class="pill">Last updated: Apr 28, 2026 06:26 PM</span>
+            <span class="pill">168 records</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="./index.html">← Dashboard</a>
+          <a href="./inventory.html">Inventory</a>
+          
+            <a href="./sales-completed.html" class="current">Sales Completed</a>
+            <a href="./sales-pending.html">Sales Pending</a>
+          
+          <a href="./Chiraath-Summary-Apr26.xlsx" download>⬇ Excel</a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        
+        <div class="kpi">
+          <div class="label">Total Records</div>
+          <div class="value">168</div>
+          <div class="hint">Completed sales</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">Total Amount</div>
+          <div class="value">₹286,020</div>
+          <div class="hint">Sum of Amount (₹)</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">This Month</div>
+          <div class="value">₹39,208</div>
+          <div class="hint">Apr 2026</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">Largest Sale</div>
+          <div class="value">₹9,250</div>
+          <div class="hint">Max Amount (₹)</div>
+        </div>
+        
+      </div>
+
+      <div class="card">
+        <h2>Completed Sales</h2>
+
+        <div class="search-wrap">
+          <div class="search-label">🔎 Search Completed sales</div>
+          <input
+            type="text"
+            id="salesSearch"
+            class="search-input"
+            placeholder="Search by customer, amount, payment method, partner, or comments..."
+          />
+        </div>
+
+        <div class="scroll">
+          <table id="salesTable">
+            <thead>
+              <tr>
+                
+                <th class="date">Date</th>
+                
+                <th class="">Customer</th>
+                
+                <th class="amount">Amount (₹)</th>
+                
+                <th class="">Payment Method</th>
+                
+                <th class="">Partner Received</th>
+                
+                <th class="">Comments</th>
+                
+              </tr>
+            </thead>
+            <tbody id="salesBody">
+              <tr id="helperRow" style="display: none;">
+                <td id="helperCell" class="helper-cell" colspan="6">
+                  No matching records.
+                </td>
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 28, 2026</td>
+                
+                <td class="">Kavya (Kasargod)</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Matka Black with Golden Yellow</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 28, 2026</td>
+                
+                <td class="">Baby Khadeeja</td>
+                
+                <td class="amount">₹1,480.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Khadi Saree Violet and Rainbow saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 28, 2026</td>
+                
+                <td class="">Anju Shinoob</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">New Banarasi - Blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 27, 2026</td>
+                
+                <td class="">Sreelekha (Kayamkulam)</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Black?</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 27, 2026</td>
+                
+                <td class="">Jini (Palakkad)</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Maroon</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 27, 2026</td>
+                
+                <td class="">Athira (Kollam)</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Black</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 26, 2026</td>
+                
+                <td class="">Sherin Fathima (Thalassery)</td>
+                
+                <td class="amount">₹1,099.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">matka - Maroon/Navy Blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 26, 2026</td>
+                
+                <td class="">Amrutha Pathanamthitta</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Maroon</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 22, 2026</td>
+                
+                <td class="">Jayalakshmi</td>
+                
+                <td class="amount">₹650.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Pink</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 22, 2026</td>
+                
+                <td class="">Sheeja EKM</td>
+                
+                <td class="amount">₹1,280.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kota Linen</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 21, 2026</td>
+                
+                <td class="">Ponnu</td>
+                
+                <td class="amount">₹1,350.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Red Banarasi New design</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 20, 2026</td>
+                
+                <td class="">Indu</td>
+                
+                <td class="amount">₹5,880.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Green Aanchal - XXL, Cream 2 piece aanchal - M,  Chikankari - XL, Blue Ajrakh Salwar - XXL, Maroon Banarasi new design</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 20, 2026</td>
+                
+                <td class="">Priya Pillai (TVM)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Manipuri Silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 18, 2026</td>
+                
+                <td class="">Anusree Bangalore</td>
+                
+                <td class="amount">₹1,280.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-117 - Tie & Dye blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 17, 2026</td>
+                
+                <td class="">Sudhisha</td>
+                
+                <td class="amount">₹980.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 17, 2026</td>
+                
+                <td class="">Jeena</td>
+                
+                <td class="amount">₹980.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 15, 2026</td>
+                
+                <td class="">Rasha Suresh (PKD)</td>
+                
+                <td class="amount">₹1,299.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Rust Orange</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 14, 2026</td>
+                
+                <td class="">Ranju</td>
+                
+                <td class="amount">₹2,000.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chokda Rust Orange, Dolla</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 13, 2026</td>
+                
+                <td class="">Malini</td>
+                
+                <td class="amount">₹980.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 13, 2026</td>
+                
+                <td class="">Sruthi</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Green Cotton Silk (CHR-88)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 13, 2026</td>
+                
+                <td class="">Swapna Binu(Thrisurr)</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Yellow Green (CHR-146)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 13, 2026</td>
+                
+                <td class="">Baby Khadeeja</td>
+                
+                <td class="amount">₹980.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 10, 2026</td>
+                
+                <td class="">Deepa Rajan</td>
+                
+                <td class="amount">₹500.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Mulmul cotton black - CHR-65</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 10, 2026</td>
+                
+                <td class="">Jitha Joy</td>
+                
+                <td class="amount">₹650.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Cotton blend saree yellow - CHR-67</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 08, 2026</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="amount">₹730.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 08, 2026</td>
+                
+                <td class="">Geemol Mathew (Kottayam)</td>
+                
+                <td class="amount">₹1,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose georgette - Black/Violet</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 08, 2026</td>
+                
+                <td class="">Vineetha(Kottayam)</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Matka Silk - mustard</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 07, 2026</td>
+                
+                <td class="">Jothika(Pkd)</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Matka silk - Blue/red</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 06, 2026</td>
+                
+                <td class="">Chris</td>
+                
+                <td class="amount">₹1,450.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Golden color tissue with flowers</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Apr 01, 2026</td>
+                
+                <td class="">Shinoob</td>
+                
+                <td class="amount">₹3,000.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Yello & Green, Tussar Silk Teal Blue, Green Cotton Silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 24, 2026</td>
+                
+                <td class="">Chris</td>
+                
+                <td class="amount">₹3,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Georgette(Black Yellow), Net Kota Arrow, Linen Green with Golden Checks</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 23, 2026</td>
+                
+                <td class="">Malu</td>
+                
+                <td class="amount">₹1,800.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Anoop</td>
+                
+                <td class="">Aanchal Maroon XXXL Salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 19, 2026</td>
+                
+                <td class="">Neethu</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Khadee sarees</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 16, 2026</td>
+                
+                <td class="">Sari</td>
+                
+                <td class="amount">₹850.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Soft Cotton Peach with butterfly design</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 16, 2026</td>
+                
+                <td class="">Vineet (External)</td>
+                
+                <td class="amount">₹1,550.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Georgette maroon</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 12, 2026</td>
+                
+                <td class="">Aruna</td>
+                
+                <td class="amount">₹650.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Rayon Mutli colored salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 12, 2026</td>
+                
+                <td class="">Prema</td>
+                
+                <td class="amount">₹550.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Off-white cotton 2-piece set with blue floral prints (XXL)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 11, 2026</td>
+                
+                <td class="">Rameez Cousin</td>
+                
+                <td class="amount">₹1,099.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chikkankari(M)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 11, 2026</td>
+                
+                <td class="">Saranya Gopalakrishnan(Hyd)</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Matka silk - Blue/Green</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 10, 2026</td>
+                
+                <td class="">Praneetha (Kochi)</td>
+                
+                <td class="amount">₹1,099.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chikkankari(L)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 09, 2026</td>
+                
+                <td class="">Haris (EKM)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Maheswari Cotton Sil Red/Black</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 09, 2026</td>
+                
+                <td class="">Priya (Hosur)</td>
+                
+                <td class="amount">₹850.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Net kota saree - turquoise blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Mar 09, 2026</td>
+                
+                <td class="">Sheeja mol</td>
+                
+                <td class="amount">₹800.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Coral Pink Salwar (XXL)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 26, 2026</td>
+                
+                <td class="">Rajitha</td>
+                
+                <td class="amount">₹500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tissue silk floral</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 26, 2026</td>
+                
+                <td class="">Latha</td>
+                
+                <td class="amount">₹1,350.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Rainbow saree & Golden yellow with Butterfly on pallu</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 22, 2026</td>
+                
+                <td class="">Saranya Gopalakrishnan(Hyd)</td>
+                
+                <td class="amount">₹2,550.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Semi Silk Black and Cotton Silk Green</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 22, 2026</td>
+                
+                <td class="">Laks Pillai</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Chikku</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 21, 2026</td>
+                
+                <td class="">Navya</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Mustard semi silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 20, 2026</td>
+                
+                <td class="">Susmi</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Coffee brown semi silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 17, 2026</td>
+                
+                <td class="">Basheer</td>
+                
+                <td class="amount">₹1,450.00</td>
+                
+                <td class="">Gpay </td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kota Doria (Natural off-white - Aqua blues-green design)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 12, 2026</td>
+                
+                <td class="">Jiji</td>
+                
+                <td class="amount">₹799.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Mull Cotton Floral print with lace detailing</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 09, 2026</td>
+                
+                <td class="">Rinsha friend</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chanderi Soft Silk Salwar Set</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 07, 2026</td>
+                
+                <td class="">Shylaja</td>
+                
+                <td class="amount">₹1,050.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Black Linen Saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 02, 2026</td>
+                
+                <td class="">Resmi (Tvm)</td>
+                
+                <td class="amount">₹500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Cotton Saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 02, 2026</td>
+                
+                <td class="">Deepthi</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Lavender Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 02, 2026</td>
+                
+                <td class="">Raji</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Parrot Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 01, 2026</td>
+                
+                <td class="">Lethy Manoj(Thiruvalla)</td>
+                
+                <td class="amount">₹1,550.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Georgette</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Feb 01, 2026</td>
+                
+                <td class="">Rameez Relative</td>
+                
+                <td class="amount">₹1,800.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Lavender Ajrakh Print Salwar(XXL):900, Violet Salwar:900</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 29, 2026</td>
+                
+                <td class="">Rinsha</td>
+                
+                <td class="amount">₹580.00</td>
+                
+                <td class="">cash</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="">Short Kurta - M</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 29, 2026</td>
+                
+                <td class="">Salini(kottayam)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Biscuit Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 29, 2026</td>
+                
+                <td class="">Vinod(kottayam)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Biscuit Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 28, 2026</td>
+                
+                <td class="">Sreeja (TVM)</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chokda Green</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 27, 2026</td>
+                
+                <td class="">Preethy Thomas (Chingavanam)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Golden yellow Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 27, 2026</td>
+                
+                <td class="">Nisha Sajith (Chengannur)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Parrot Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 27, 2026</td>
+                
+                <td class="">Annu</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Light Violet Semi Silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 26, 2026</td>
+                
+                <td class="">Ambika (Pazhanji)</td>
+                
+                <td class="amount">₹2,700.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Biscuit Banarasi, Pink Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 26, 2026</td>
+                
+                <td class="">Anitha (Pathanamthitta)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Biscuit Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 24, 2026</td>
+                
+                <td class="">Susheela (Kannur)</td>
+                
+                <td class="amount">₹950.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Indigo Ajrakh Salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 21, 2026</td>
+                
+                <td class="">Asha(Navaikulam)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Chikku maroon</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 20, 2026</td>
+                
+                <td class="">Remya (Palakkad)</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Chokda(green)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 19, 2026</td>
+                
+                <td class="">Anu (kottayam)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kalyani Cotton</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 18, 2026</td>
+                
+                <td class="">Simi (TVM)</td>
+                
+                <td class="amount">₹1,399.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Dusty mauve</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 17, 2026</td>
+                
+                <td class="">Rinsha</td>
+                
+                <td class="amount">₹2,300.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="">Banarasi Black, Black mul mul cotton saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 16, 2026</td>
+                
+                <td class="">Seeniya</td>
+                
+                <td class="amount">₹1,650.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="">Aanchal maroon salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 16, 2026</td>
+                
+                <td class="">Linu (Kottayam)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kalyani Cotton</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 14, 2026</td>
+                
+                <td class="">Amalu(Kottayam)</td>
+                
+                <td class="amount">₹1,599.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Georgette</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 13, 2026</td>
+                
+                <td class="">Neethu(Palakkad)</td>
+                
+                <td class="amount">₹1,450.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Chokda(blue)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 12, 2026</td>
+                
+                <td class="">Dr Annie Syam</td>
+                
+                <td class="amount">₹3,000.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="">2 Tusser embroidery(blue/green), Yellow tissue silk</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 12, 2026</td>
+                
+                <td class="">Liji(Vadakara)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kalyani Cotton</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 11, 2026</td>
+                
+                <td class="">Resmi (Thrissur)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Chikku</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 11, 2026</td>
+                
+                <td class="">Ananya(TVM)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kalyani Cotton</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 10, 2026</td>
+                
+                <td class="">Divya (Kollam)</td>
+                
+                <td class="amount">₹1,100.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Kalyani Cotton</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 07, 2026</td>
+                
+                <td class="">Priya Reji (Alappuzha)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Parrot Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 06, 2026</td>
+                
+                <td class="">Aswathy (TVM)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Biscuit Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 05, 2026</td>
+                
+                <td class="">Shidhin</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Plus size white salwar - XXXL</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 02, 2026</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="amount">₹1,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class="">Off white saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 02, 2026</td>
+                
+                <td class="">Sushitha</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Roman Silk(XL)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 02, 2026</td>
+                
+                <td class="">Lathika</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Indig blue salwar (L)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Jan 02, 2026</td>
+                
+                <td class="">Shiji</td>
+                
+                <td class="amount">₹2,750.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi parrot green, vneck peach(L)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 29, 2025</td>
+                
+                <td class="">Indu</td>
+                
+                <td class="amount">₹3,200.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Aanchal Salwars</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 26, 2025</td>
+                
+                <td class="">Silpa</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Saree - Biscuit </td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 26, 2025</td>
+                
+                <td class="">Vijina (Kannur)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Golden Yellow</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 26, 2025</td>
+                
+                <td class="">Nisha Nair (Alappuzha)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Parrot Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 26, 2025</td>
+                
+                <td class="">Silpa</td>
+                
+                <td class="amount">₹690.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Anoop</td>
+                
+                <td class="">Banarasi Saree - Biscuit </td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 22, 2025</td>
+                
+                <td class="">Shajeena (TVM)</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Chikku</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 22, 2025</td>
+                
+                <td class="">Sourabhya</td>
+                
+                <td class="amount">₹580.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Jute Kurti</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Malu</td>
+                
+                <td class="amount">₹4,529.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Anoop</td>
+                
+                <td class="">Golden Banarasi, Cotton Silk (contrast colors), Kalyani Cotton Orange</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Girija</td>
+                
+                <td class="amount">₹3,700.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Viscose Rayan Saree, Banarasi Chikku green, Khadi, Rayon multi colored Salwar(XL)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Ranju</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">gift(Khadi/Salwars) - Khadi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Anoop</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Anoop</td>
+                
+                <td class="">gift(Khadi/Salwars) - White violet salwar, Khadi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Nalini</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tie & Dye Rani Pink</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 20, 2025</td>
+                
+                <td class="">Sruthi</td>
+                
+                <td class="amount">₹3,900.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Anchal Off white/blue dupatta salwar, red wine salwar, Anchal black salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 19, 2025</td>
+                
+                <td class="">Prema</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Brick Red Salwar Elephant print</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 19, 2025</td>
+                
+                <td class="">Jyothi mol</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Karassery Account</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Yellow/Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 18, 2025</td>
+                
+                <td class="">Dona</td>
+                
+                <td class="amount">₹2,100.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Aanchal green floral & Silk Saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 17, 2025</td>
+                
+                <td class="">Malini</td>
+                
+                <td class="amount">₹700.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chanderi rani pink saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 17, 2025</td>
+                
+                <td class="">Aasa</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Yellow/Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 17, 2025</td>
+                
+                <td class="">Rishma</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Yellow Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 17, 2025</td>
+                
+                <td class="">Jisha</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Karassery Account</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Maroon - Silk Blend Salwar set</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 16, 2025</td>
+                
+                <td class="">Resmi</td>
+                
+                <td class="amount">₹699.00</td>
+                
+                <td class="">Net banking</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chanderi blue saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 05, 2025</td>
+                
+                <td class="">Ranju</td>
+                
+                <td class="amount">₹1,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Black Salwar (XXL)</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 05, 2025</td>
+                
+                <td class="">Malini</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Chikku</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 05, 2025</td>
+                
+                <td class="">Aruna</td>
+                
+                <td class="amount">₹7,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Silk Saree, Kalyani yellow saree, Banarasi biscuit, Banarasi blue, Pashmina saree, Chanderi violet saree</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 01, 2025</td>
+                
+                <td class="">Yaaser</td>
+                
+                <td class="amount">₹4,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Anchal 3 salwars</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Dec 01, 2025</td>
+                
+                <td class="">Shanu</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chanderi silk salwar</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 25, 2025</td>
+                
+                <td class="">Shimna</td>
+                
+                <td class="amount">₹4,900.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Anchal 3 salwars</td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 24, 2025</td>
+                
+                <td class="">Aasa</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 23, 2025</td>
+                
+                <td class="">Pramitha</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 22, 2025</td>
+                
+                <td class="">Haseena</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 21, 2025</td>
+                
+                <td class="">Aasa</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 03, 2025</td>
+                
+                <td class="">Silpa</td>
+                
+                <td class="amount">₹1,500.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Nov 02, 2025</td>
+                
+                <td class="">Silpa</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 21, 2025</td>
+                
+                <td class="">Sreelakshmi</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 20, 2025</td>
+                
+                <td class="">Silpa</td>
+                
+                <td class="amount">₹600.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 19, 2025</td>
+                
+                <td class="">Shinoob friend</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 18, 2025</td>
+                
+                <td class="">Divya</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 17, 2025</td>
+                
+                <td class="">Athulya</td>
+                
+                <td class="amount">₹1,799.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 16, 2025</td>
+                
+                <td class="">Jisha</td>
+                
+                <td class="amount">₹3,000.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 16, 2025</td>
+                
+                <td class="">Baby Khadeeja</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 15, 2025</td>
+                
+                <td class="">Binija</td>
+                
+                <td class="amount">₹1,560.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 09, 2025</td>
+                
+                <td class="">Dilna</td>
+                
+                <td class="amount">₹800.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 09, 2025</td>
+                
+                <td class="">Saida</td>
+                
+                <td class="amount">₹3,000.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 05, 2025</td>
+                
+                <td class="">Susmi</td>
+                
+                <td class="amount">₹5,900.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 04, 2025</td>
+                
+                <td class="">Asha Rose</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Oct 03, 2025</td>
+                
+                <td class="">Nishitha</td>
+                
+                <td class="amount">₹800.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 30, 2025</td>
+                
+                <td class="">Lulu</td>
+                
+                <td class="amount">₹3,800.00</td>
+                
+                <td class="">Karassery Account</td>
+                
+                <td class="">Rameez</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 24, 2025</td>
+                
+                <td class="">Anju</td>
+                
+                <td class="amount">₹9,250.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 24, 2025</td>
+                
+                <td class="">Yassar</td>
+                
+                <td class="amount">₹2,500.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 22, 2025</td>
+                
+                <td class="">Dona</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 21, 2025</td>
+                
+                <td class="">Arun Sir</td>
+                
+                <td class="amount">₹2,400.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 20, 2025</td>
+                
+                <td class="">Saida</td>
+                
+                <td class="amount">₹3,500.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 19, 2025</td>
+                
+                <td class="">Priya</td>
+                
+                <td class="amount">₹1,400.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 18, 2025</td>
+                
+                <td class="">Malini</td>
+                
+                <td class="amount">₹1,500.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 17, 2025</td>
+                
+                <td class="">Salmath</td>
+                
+                <td class="amount">₹800.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 17, 2025</td>
+                
+                <td class="">Salmath</td>
+                
+                <td class="amount">₹1,300.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 16, 2025</td>
+                
+                <td class="">Jasin</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 15, 2025</td>
+                
+                <td class="">Deepthi</td>
+                
+                <td class="amount">₹1,800.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 14, 2025</td>
+                
+                <td class="">Lulu</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 13, 2025</td>
+                
+                <td class="">Amina</td>
+                
+                <td class="amount">₹900.00</td>
+                
+                <td class="">Karassery Bank</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 12, 2025</td>
+                
+                <td class="">Denny</td>
+                
+                <td class="amount">₹2,600.00</td>
+                
+                <td class="">Karassery Bank</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 11, 2025</td>
+                
+                <td class="">Sudisha</td>
+                
+                <td class="amount">₹2,900.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 10, 2025</td>
+                
+                <td class="">Sindhu</td>
+                
+                <td class="amount">₹700.00</td>
+                
+                <td class="">Karassery Bank</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 09, 2025</td>
+                
+                <td class="">Leena</td>
+                
+                <td class="amount">₹750.00</td>
+                
+                <td class="">Karassery Bank</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 08, 2025</td>
+                
+                <td class="">Bhaskaran</td>
+                
+                <td class="amount">₹900.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 07, 2025</td>
+                
+                <td class="">Sreejesh</td>
+                
+                <td class="amount">₹1,300.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 06, 2025</td>
+                
+                <td class="">Indu</td>
+                
+                <td class="amount">₹8,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 05, 2025</td>
+                
+                <td class="">Munni</td>
+                
+                <td class="amount">₹4,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 04, 2025</td>
+                
+                <td class="">Divya</td>
+                
+                <td class="amount">₹2,500.00</td>
+                
+                <td class="">Karassery Bank</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 03, 2025</td>
+                
+                <td class="">Raji</td>
+                
+                <td class="amount">₹3,400.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 02, 2025</td>
+                
+                <td class="">Suresh (PVB)</td>
+                
+                <td class="amount">₹2,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Sep 01, 2025</td>
+                
+                <td class="">Binoy</td>
+                
+                <td class="amount">₹1,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Jisha</td>
+                
+                <td class="amount">₹1,800.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Latha</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Sreejesh</td>
+                
+                <td class="amount">₹2,000.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Susmitha</td>
+                
+                <td class="amount">₹1,600.00</td>
+                
+                <td class="">Cash</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Beena (Knr)</td>
+                
+                <td class="amount">₹750.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Binoy</td>
+                
+                <td class="amount">₹3,600.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              <tr class="sales-row ">
+                
+                <td class="date">Aug 31, 2025</td>
+                
+                <td class="">Chris</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class="">GPay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class=""></td>
+                
+              </tr>
+              
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          Search across customer, amount, payment method, partner, and comments. Sorted newest first.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function filterSales() {
+        const inputEl = document.getElementById("salesSearch");
+        const helperRow = document.getElementById("helperRow");
+        const helperCell = document.getElementById("helperCell");
+        const rows = document.querySelectorAll(".sales-row");
+        const input = (inputEl.value || "").toLowerCase().trim();
+
+        let visible = 0;
+
+        rows.forEach((row) => {
+          const text = (row.textContent || "").toLowerCase();
+          if (!input || text.includes(input)) {
+            row.style.display = "table-row";
+            visible += 1;
+          } else {
+            row.style.display = "none";
+          }
+        });
+
+        if (input && visible === 0) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent = "No matching records.";
+        } else {
+          helperRow.style.display = "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputEl = document.getElementById("salesSearch");
+        if (inputEl) {
+          inputEl.addEventListener("input", filterSales);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,508 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chiraath — Sales Pending</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --border: #e5e7eb;
+        --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+        --radius: 16px;
+        --accent: #4f46e5;
+        --accent-soft: #eef2ff;
+        --green: #16a34a;
+        --green-bg: #dcfce7;
+        --amber: #d97706;
+        --amber-bg: #fef3c7;
+        --red: #dc2626;
+        --red-bg: #fee2e2;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 24px auto;
+        padding: 0 16px 48px;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+
+      h1 { font-size: 22px; margin: 0; letter-spacing: 0.2px; }
+      .sub { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+      .pill {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--muted);
+        background: #fff;
+        margin-right: 4px;
+      }
+
+      .pill.status-completed { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+      .pill.status-pending { color: var(--amber); border-color: var(--amber); background: var(--amber-bg); }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+      .actions a {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        font-size: 13px;
+        color: var(--text);
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .actions a:hover { background: var(--accent-soft); border-color: var(--accent); }
+      .actions a.current {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        cursor: default;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin: 14px 0;
+      }
+
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+      }
+      .kpi .label { color: var(--muted); font-size: 12px; }
+      .kpi .value { font-size: 22px; font-weight: 750; margin-top: 6px; }
+      .kpi .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+
+      h2 { margin: 0 0 10px; font-size: 15px; }
+      .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: #fafafa;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        font-weight: 600;
+      }
+
+      td.amount, th.amount { text-align: right; white-space: nowrap; }
+      td.date, th.date { white-space: nowrap; }
+
+      .scroll {
+        max-height: 70vh;
+        overflow: auto;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border: 2px solid #6366f1;
+        border-radius: 12px;
+        font-size: 14px;
+        background: #fff;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+      .search-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      }
+      .search-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .search-wrap {
+        position: sticky;
+        top: 0;
+        background: var(--card);
+        z-index: 5;
+        padding-bottom: 8px;
+      }
+
+      .helper-cell { color: var(--muted); }
+
+      .row-pending { background: #fffbeb; }
+
+      @media (max-width: 980px) {
+        .hero { align-items: flex-start; flex-direction: column; }
+        .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 600px) {
+        .wrap { padding: 0 10px 36px; }
+        .card { padding: 14px 10px; }
+        h2 { font-size: 14px; margin-bottom: 12px; }
+        table { font-size: 12px; }
+        th, td { padding: 8px 6px; }
+        .kpi .value { font-size: 18px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <h1>Chiraath — Sales Pending</h1>
+          <div class="sub">
+            <span class="pill status-pending">Pending</span>
+            <span class="pill">Last updated: Apr 28, 2026 06:26 PM</span>
+            <span class="pill">11 records</span>
+          </div>
+        </div>
+        <div class="actions">
+          <a href="./index.html">← Dashboard</a>
+          <a href="./inventory.html">Inventory</a>
+          
+            <a href="./sales-completed.html">Sales Completed</a>
+            <a href="./sales-pending.html" class="current">Sales Pending</a>
+          
+          <a href="./Chiraath-Summary-Apr26.xlsx" download>⬇ Excel</a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        
+        <div class="kpi">
+          <div class="label">Pending Count</div>
+          <div class="value">11</div>
+          <div class="hint">Records in this view</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">Pending Amount</div>
+          <div class="value">₹13,369</div>
+          <div class="hint">Sum of Amount (₹)</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">Oldest Pending</div>
+          <div class="value">Apr 10, 2026</div>
+          <div class="hint">18 days ago</div>
+        </div>
+        
+        <div class="kpi">
+          <div class="label">Average Pending</div>
+          <div class="value">₹1,215</div>
+          <div class="hint">Mean per record</div>
+        </div>
+        
+      </div>
+
+      <div class="card">
+        <h2>Pending Sales</h2>
+
+        <div class="search-wrap">
+          <div class="search-label">🔎 Search Pending sales</div>
+          <input
+            type="text"
+            id="salesSearch"
+            class="search-input"
+            placeholder="Search by customer, amount, payment method, partner, or comments..."
+          />
+        </div>
+
+        <div class="scroll">
+          <table id="salesTable">
+            <thead>
+              <tr>
+                
+                <th class="date">Date</th>
+                
+                <th class="">Customer</th>
+                
+                <th class="amount">Amount (₹)</th>
+                
+                <th class="">Payment Method</th>
+                
+                <th class="">Partner Received</th>
+                
+                <th class="">Comments</th>
+                
+              </tr>
+            </thead>
+            <tbody id="salesBody">
+              <tr id="helperRow" style="display: none;">
+                <td id="helperCell" class="helper-cell" colspan="6">
+                  No matching records.
+                </td>
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 10, 2026</td>
+                
+                <td class="">Saranya Gopalakrishnan(Hyd)</td>
+                
+                <td class="amount">₹950.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tussar silk Green(CHR-70) - 500 advance</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 10, 2026</td>
+                
+                <td class="">Latha</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Sungudi  (Alice Christy inspired)</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 17, 2026</td>
+                
+                <td class="">Athulya</td>
+                
+                <td class="amount">₹980.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Tant mix bank - peacock blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 19, 2026</td>
+                
+                <td class="">Shini</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Banarasi Green Old design</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 21, 2026</td>
+                
+                <td class="">Prema</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chikku Maroon banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 21, 2026</td>
+                
+                <td class="">Leena</td>
+                
+                <td class="amount">₹1,380.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chikku Green Banarasi</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 22, 2026</td>
+                
+                <td class="">Aasa</td>
+                
+                <td class="amount">₹1,250.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Chokda Lotus</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 22, 2026</td>
+                
+                <td class="">Sudhisha</td>
+                
+                <td class="amount">₹950.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Salwar maroon single piece M (CHR-78)</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 22, 2026</td>
+                
+                <td class="">Dona</td>
+                
+                <td class="amount">₹1,300.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Black & Blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 24, 2026</td>
+                
+                <td class="">Jyothi mol</td>
+                
+                <td class="amount">₹650.00</td>
+                
+                <td class=""></td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">CHR-119 - Chanderi Silk Blue</td>
+                
+              </tr>
+              
+              <tr class="sales-row row-pending">
+                
+                <td class="date">Apr 28, 2026</td>
+                
+                <td class="">Silpa Kannur</td>
+                
+                <td class="amount">₹1,899.00</td>
+                
+                <td class="">Gpay</td>
+                
+                <td class="">Rajna</td>
+                
+                <td class="">Matka Green/Yellow & Bengal Cotton (Adv:100)</td>
+                
+              </tr>
+              
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          Pending sales (advance/promised, awaiting collection). Sorted oldest first.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function filterSales() {
+        const inputEl = document.getElementById("salesSearch");
+        const helperRow = document.getElementById("helperRow");
+        const helperCell = document.getElementById("helperCell");
+        const rows = document.querySelectorAll(".sales-row");
+        const input = (inputEl.value || "").toLowerCase().trim();
+
+        let visible = 0;
+
+        rows.forEach((row) => {
+          const text = (row.textContent || "").toLowerCase();
+          if (!input || text.includes(input)) {
+            row.style.display = "table-row";
+            visible += 1;
+          } else {
+            row.style.display = "none";
+          }
+        });
+
+        if (input && visible === 0) {
+          helperRow.style.display = "table-row";
+          helperCell.textContent = "No matching records.";
+        } else {
+          helperRow.style.display = "none";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const inputEl = document.getElementById("salesSearch");
+        if (inputEl) {
+          inputEl.addEventListener("input", filterSales);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -53,6 +53,12 @@ MONTH_DATA_ROWS = (10, 21)
 MONTH_COLS = (1, 4)  # A-D
 MONTH_PROFIT_COL = "Net Cash Flow (₹)"  # rename here if the column heading changes
 
+# Colour palette (matches dashboard CSS theme)
+C_INDIGO = "#4f46e5"
+C_GREEN  = "#16a34a"
+C_RED    = "#dc2626"
+C_AMBER  = "#d97706"
+
 # Category qty: header row 46, data 47-49, cols F-H
 CATQTY_HEADER_ROW = 46
 CATQTY_DATA_ROWS = (47, 49)
@@ -133,6 +139,25 @@ def _num(x) -> float:
         return float(x)
     except (TypeError, ValueError):
         return 0.0
+
+
+def compute_mom_badge(history: list[dict], key: str) -> dict:
+    """Return a MoM badge dict with 'text' and 'cls' keys.
+
+    Compares the two most recent history snapshots. Returns empty dict values
+    if there is insufficient history or the previous value is zero.
+    """
+    if len(history) < 2:
+        return {"text": "", "cls": ""}
+    sorted_h = sorted(history, key=lambda x: x.get("date", ""), reverse=True)
+    curr_val = _num(sorted_h[0].get(key, 0))
+    prev_val = _num(sorted_h[1].get(key, 0))
+    if prev_val == 0:
+        return {"text": "", "cls": ""}
+    pct = ((curr_val - prev_val) / abs(prev_val)) * 100
+    arrow = "▲" if pct >= 0 else "▼"
+    cls = "mom-up" if pct >= 0 else "mom-down"
+    return {"text": f"{arrow} {abs(pct):.1f}% vs prev", "cls": cls}
 
 
 def update_history(
@@ -420,10 +445,12 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     if {"Month", "Purchases (₹)", "Sales (₹)"}.issubset(set(month_df.columns)):
         fig_month = go.Figure()
         fig_month.add_trace(
-            go.Bar(x=month_df["Month"], y=month_df["Purchases (₹)"], name="Purchases")
+            go.Bar(x=month_df["Month"], y=month_df["Purchases (₹)"], name="Purchases",
+                   marker_color=C_INDIGO)
         )
         fig_month.add_trace(
-            go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales")
+            go.Bar(x=month_df["Month"], y=month_df["Sales (₹)"], name="Sales",
+                   marker_color=C_GREEN)
         )
         fig_month.update_layout(
             barmode="group",
@@ -453,6 +480,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             markers=True,
             title=f"Monthly {MONTH_PROFIT_COL}",
         )
+        fig_profit.update_traces(line=dict(color=C_INDIGO, width=2.5), marker=dict(color=C_INDIGO))
         fig_profit.update_layout(margin=dict(l=40, r=20, t=50, b=40))
         charts["profit"] = pio.to_html(
             fig_profit,
@@ -471,13 +499,15 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
     if {"Category", "Qty Sold", "Qty Pending"}.issubset(set(cat_qty_df.columns)):
         fig_cat_qty = go.Figure()
         fig_cat_qty.add_trace(
-            go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold")
+            go.Bar(x=cat_qty_df["Category"], y=cat_qty_df["Qty Sold"], name="Qty Sold",
+                   marker_color=C_GREEN)
         )
         fig_cat_qty.add_trace(
             go.Bar(
                 x=cat_qty_df["Category"],
                 y=cat_qty_df["Qty Pending"],
                 name="Qty Pending",
+                marker_color=C_AMBER,
             )
         )
         fig_cat_qty.update_layout(
@@ -507,6 +537,7 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             y="Pending Value (₹)",
             title="Pending Stock Value by Category (₹)",
         )
+        fig_pending_val.update_traces(marker_color=C_INDIGO)
         fig_pending_val.update_layout(margin=dict(l=40, r=20, t=50, b=40))
         charts["pending_val"] = pio.to_html(
             fig_pending_val,
@@ -578,6 +609,15 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
             "</div>"
         )
 
+    # ── Profit/Loss KPI colour class ──
+    profit_loss_class = "kpi-profit" if _num(profit_loss) >= 0 else "kpi-loss"
+
+    # ── Month-over-month badges (uses history built above) ──
+    mom_purchases = compute_mom_badge(history, "total_purchases")
+    mom_sales     = compute_mom_badge(history, "total_sales")
+    mom_profit    = compute_mom_badge(history, "profit_loss")
+    mom_pending   = compute_mom_badge(history, "pending_stock_value")
+
     contrib_records, contrib_cols = format_df_currency(contrib_df)
     cash_records, cash_cols = format_df_currency(cash_df)
 
@@ -608,8 +648,13 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         total_purchases=money0(total_purchases),
         total_sales_completed=money0(total_sales_completed),
         profit_loss=money0(profit_loss),
+        profit_loss_class=profit_loss_class,
         profit_status=str(profit_status or ""),
         pending_stock_value=money2(pending_stock_value),
+        mom_purchases=mom_purchases,
+        mom_sales=mom_sales,
+        mom_profit=mom_profit,
+        mom_pending=mom_pending,
         chart_month=charts["month"],
         chart_profit=charts["profit"],
         chart_cat_qty=charts["cat_qty"],

@@ -138,6 +138,39 @@
       .kpi .value { font-size: 24px; font-weight: 750; margin-top: 6px; }
       .kpi .hint  { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
+      /* ── KPI profit/loss colour ── */
+      .kpi-profit .value { color: var(--green); }
+      .kpi-loss   .value { color: var(--red); }
+
+      /* ── MoM badge ── */
+      .mom {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-top: 6px;
+        letter-spacing: 0.1px;
+      }
+      .mom-up   { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+      .mom-down { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-border); }
+
+      /* ── Partner avatar ── */
+      .avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 700;
+        margin-right: 6px;
+        flex-shrink: 0;
+        vertical-align: middle;
+        letter-spacing: 0;
+      }
+
       .kpis {
         grid-column: 1 / -1;
         display: grid;
@@ -368,21 +401,25 @@
             <div class="label">Total Purchases</div>
             <div class="value">{{ total_purchases }}</div>
             <div class="hint">From Summary tab</div>
+            {% if mom_purchases.text %}<span class="mom {{ mom_purchases.cls }}">{{ mom_purchases.text }}</span>{% endif %}
           </div>
           <div class="kpi">
             <div class="label">Total Sales (Completed)</div>
             <div class="value">{{ total_sales_completed }}</div>
             <div class="hint">Completed only</div>
+            {% if mom_sales.text %}<span class="mom {{ mom_sales.cls }}">{{ mom_sales.text }}</span>{% endif %}
           </div>
-          <div class="kpi">
+          <div class="kpi {{ profit_loss_class }}">
             <div class="label">Profit / Loss (Completed)</div>
             <div class="value">{{ profit_loss }}</div>
             <div class="hint">{{ profit_status }}</div>
+            {% if mom_profit.text %}<span class="mom {{ mom_profit.cls }}">{{ mom_profit.text }}</span>{% endif %}
           </div>
           <div class="kpi">
             <div class="label">Pending Stock Value</div>
             <div class="value">{{ pending_stock_value }}</div>
             <div class="hint">From Dashboard tab</div>
+            {% if mom_pending.text %}<span class="mom {{ mom_pending.cls }}">{{ mom_pending.text }}</span>{% endif %}
           </div>
         </div>
 
@@ -538,6 +575,87 @@
       window.addEventListener("load", function () {
         if (typeof Plotly !== "undefined") applyMonthFilter(0);
       });
+
+      // ─────────────────────────────────────────
+      // Count-up animation on KPI values
+      // ─────────────────────────────────────────
+      function countUpEl(el) {
+        var original = el.textContent.trim();
+        // Extract numeric part (handles ₹, commas, negatives)
+        var isNeg   = original.indexOf("-") !== -1;
+        var stripped = original.replace(/[₹,\s\-]/g, "");
+        var target   = parseFloat(stripped);
+        if (isNaN(target) || target === 0) return;
+        var prefix   = original.indexOf("₹") !== -1 ? "₹" : "";
+        var dotIdx   = original.indexOf(".");
+        var decimals = dotIdx !== -1 ? (original.length - dotIdx - 1) : 0;
+        var duration = 900;
+        var startTs  = null;
+
+        function fmt(val) {
+          var s = val.toLocaleString("en-IN", {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+          });
+          return (isNeg ? "-" : "") + prefix + s;
+        }
+
+        function step(ts) {
+          if (!startTs) startTs = ts;
+          var progress = Math.min((ts - startTs) / duration, 1);
+          var eased    = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+          el.textContent = fmt(eased * target);
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = original; // snap to exact original at end
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      window.addEventListener("load", function () {
+        document.querySelectorAll(".kpi .value").forEach(countUpEl);
+      });
+
+      // ─────────────────────────────────────────
+      // Partner initials avatar badges in tables
+      // ─────────────────────────────────────────
+      var AVATAR_COLOURS = [
+        { bg: "#eef2ff", fg: "#4f46e5" },
+        { bg: "#f0fdf4", fg: "#16a34a" },
+        { bg: "#fffbeb", fg: "#d97706" },
+        { bg: "#ecfeff", fg: "#0891b2" },
+        { bg: "#f5f3ff", fg: "#7c3aed" },
+      ];
+
+      function addAvatars(tableId) {
+        var table = document.getElementById(tableId);
+        if (!table) return;
+        var idx = 0;
+        table.querySelectorAll("tbody tr").forEach(function (row) {
+          var firstCell = row.querySelector("td:first-child");
+          if (!firstCell) return;
+          var name = firstCell.textContent.trim();
+          var words = name.split(/\s+/).filter(Boolean);
+          var initials = words.slice(0, 2).map(function (w) {
+            return w[0] ? w[0].toUpperCase() : "";
+          }).join("");
+          var col    = AVATAR_COLOURS[idx % AVATAR_COLOURS.length];
+          var avatar = document.createElement("span");
+          avatar.className = "avatar";
+          avatar.style.background = col.bg;
+          avatar.style.color      = col.fg;
+          avatar.textContent      = initials;
+          firstCell.style.display = "flex";
+          firstCell.style.alignItems = "center";
+          firstCell.insertBefore(avatar, firstCell.firstChild);
+          idx++;
+        });
+      }
+
+      addAvatars("contrib-table");
+      addAvatars("cash-table");
     </script>
   </body>
 </html>

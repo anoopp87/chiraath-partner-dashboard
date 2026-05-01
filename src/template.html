@@ -329,6 +329,9 @@
         .scroll { overflow-x: hidden; overflow-y: auto; }
         #contrib-table, #cash-table { width: 100%; }
 
+        /* Hide avatars on mobile — not enough room */
+        .avatar { display: none !important; }
+
         /* Tidier KPI cards */
         .kpi { padding: 12px; }
         .kpi .value { font-size: 20px; }
@@ -647,8 +650,6 @@
           avatar.style.background = col.bg;
           avatar.style.color      = col.fg;
           avatar.textContent      = initials;
-          firstCell.style.display = "flex";
-          firstCell.style.alignItems = "center";
           firstCell.insertBefore(avatar, firstCell.firstChild);
           idx++;
         });

@@ -84,6 +84,11 @@ CASH_COLS = (1, 7)  # A-F
 # Helpers
 # ---------------------------
 def excel_serial_to_datetime(x) -> str:
+    try:
+        if pd.isnull(x):
+            return "—"
+    except (TypeError, ValueError):
+        pass
     if isinstance(x, (datetime, date)):
         return x.strftime("%b %d, %Y")
     if isinstance(x, (int, float)) and x:
@@ -684,11 +689,14 @@ def build(input_xlsx: Path, template_path: Path, dist_dir: Path) -> None:
         pending_df = pd.DataFrame()
 
     # Sort: completed newest-first, pending oldest-first (so stale ones surface)
+    # Coerce "Date" to datetime first to avoid mixed str/datetime comparison errors
     if not completed_df.empty and "Date" in completed_df.columns:
+        completed_df["Date"] = pd.to_datetime(completed_df["Date"], errors="coerce")
         completed_df = completed_df.sort_values(
             by="Date", ascending=False, na_position="last"
         ).reset_index(drop=True)
     if not pending_df.empty and "Date" in pending_df.columns:
+        pending_df["Date"] = pd.to_datetime(pending_df["Date"], errors="coerce")
         pending_df = pending_df.sort_values(
             by="Date", ascending=True, na_position="last"
         ).reset_index(drop=True)

@@ -321,6 +321,13 @@
       "total_sales": 537362.0,
       "profit_loss": -29446.0,
       "pending_stock_value": 171407.34666666665
+    },
+    {
+      "date": "2026-08-27",
+      "total_purchases": 566808.0,
+      "total_sales": 541092.0,
+      "profit_loss": -25716.0,
+      "pending_stock_value": 168031.34666666665
     }
   ]
 }
